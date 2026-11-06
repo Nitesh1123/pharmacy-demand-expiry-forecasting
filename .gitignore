@@ -1,0 +1,50 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Data files (keep raw/generated data reproducible via script)
+data/*.csv
+data/*.parquet
+!data/README.md
+!data/.gitkeep
+
+# Model artifacts (save locally or download from releases)
+models/*.joblib
+models/*.pkl
+models/*.pt
+models/*.onnx
+!models/.gitkeep
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secrets & Local environment variables
+.env
+*.env
+!*.env.example
+
+# Test & coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Agent tools and skills
+.agents/
+skills-lock.json
+

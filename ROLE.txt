@@ -1,0 +1,21 @@
+Role: Artificial Intelligence and Machine Learning Intern
+
+Role Overview: 
+Support experiments and practical implementations involving data preparation, machine learning, model evaluation and AI-enabled product features. Specific work will depend on project needs and the candidate's demonstrated skills.
+
+Key Responsibilities
+** Prepare, clean and inspect datasets; document assumptions, data quality issues and transformation steps.
+** Support baseline model development, experimentation, validation and performance evaluation where appropriate.
+** Use suitable metrics and test data to assess whether a model is useful for its intended task.
+** Explore integration of AI services or LLM-based capabilities into web/mobile workflows when applicable.
+** Create clear notebooks, scripts or technical notes so experiments are reproducible and results are understandable.
+** Consider reliability, privacy, bias, hallucination risks and human review when working with AI-generated outputs.
+
+Required/ Expected skills
+** Python fundamentals and willingness to work with data and code-based experiments.
+** Basic understanding of machine learning concepts, data splitting, training, validation and evaluation.
+** Analytical thinking and ability to interpret results rather than relying only on a model score.
+** Interest in learning relevant libraries such as NumPy, pandas and scikit-learn, as required by projects.
+
+Good to Have: 
+** Deep learning fundamentals, PyTorch or TensorFlow, SQL, NLP, computer vision, AI APIs, LLM application patterns, retrieval-augmented generation (RAG) or a relevant project/research assignment.
