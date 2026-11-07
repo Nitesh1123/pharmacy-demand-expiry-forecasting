@@ -1,0 +1,33 @@
+{
+  "schema_version": 2,
+  "seed": 42,
+  "products": 80,
+  "days": 730,
+  "start_date": "2022-01-01",
+  "risk_threshold": 0.2,
+  "python": "3.13.1",
+  "numpy": "2.3.5",
+  "pandas": "2.3.3",
+  "files": {
+    "products.csv": {
+      "rows": 80,
+      "sha256": "d4b4869cba3ded7f21702b97318a4425e6143d61176b7126e1160d0f5df44825"
+    },
+    "batches.csv": {
+      "rows": 2003,
+      "sha256": "cd58a7af24f9410f33d12d46d78408e07a4b9ece07b6f1175cf229539c53a9b9"
+    },
+    "sales.csv": {
+      "rows": 59281,
+      "sha256": "4ebd784040b30a8776036e26a66378c4198337c6c3a9c00b21b3c0fc4c0c8665"
+    },
+    "daily_sales.csv": {
+      "rows": 58400,
+      "sha256": "93b920f5600bb0ba82b4ec1667a954cdddd02b97fc29db637cde3d54c339a7c2"
+    },
+    "inventory_snapshots.csv": {
+      "rows": 39062,
+      "sha256": "8dbdbd1bd30af0cc658eaac0dfb486af5ee4ac07d6a0fff1c029449ac7b41ec8"
+    }
+  }
+}

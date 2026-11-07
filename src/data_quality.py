@@ -116,7 +116,8 @@ def validate_dataset(tables):
                           ("middle", "2023-06-01", "2023-08-31"),
                           ("late", "2023-09-01", "2023-12-31")]:
         rows = batches.loc[batches.outcome_date.fillna("").between(lo, hi)]
-        periods[name] = {"positive": int((rows.expiry_risk == 1).sum()),
+        periods[name] = {"start_date": lo, "end_date": hi,
+                         "positive": int((rows.expiry_risk == 1).sum()),
                          "negative": int((rows.expiry_risk == 0).sum())}
     return {
         "checks_passed": True, "start_date": start, "end_date": end,

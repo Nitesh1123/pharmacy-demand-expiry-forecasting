@@ -1,3 +1,7 @@
+import subprocess
+import sys
+from pathlib import Path
+
 import pandas as pd
 import pytest
 
@@ -65,3 +69,26 @@ def test_daily_sales_include_every_product_day_and_balance(dataset):
 def test_tiny_run_has_csv_headers_even_without_snapshots():
     tiny = generate_dataset(num_products=1, days=1)
     assert "as_of_date" in tiny["inventory_snapshots"].columns
+
+
+def test_allocations_follow_fefo(dataset):
+    batches = dataset["batches"].to_dict("records")
+    remaining = {b["batch_id"]: b["quantity_received"] for b in batches}
+    for sale in dataset["sales"].itertuples():
+        eligible = [b for b in batches if b["product_id"] == sale.product_id
+                    and b["received_date"] <= sale.sale_date < b["expiry_date"]
+                    and remaining[b["batch_id"]] > 0]
+        expected = min(eligible, key=lambda b: (b["expiry_date"], b["batch_id"]))
+        assert sale.batch_id == expected["batch_id"]
+        remaining[sale.batch_id] -= sale.quantity_sold
+        assert remaining[sale.batch_id] >= 0
+
+
+def test_cli_rejects_invalid_input_without_creating_output(tmp_path):
+    output = tmp_path / "invalid"
+    script = Path(__file__).resolve().parents[1] / "src" / "data_generator.py"
+    result = subprocess.run([sys.executable, str(script), "--days", "0", "--output_dir", str(output)],
+                            capture_output=True, text=True)
+    assert result.returncode == 2
+    assert "positive" in result.stderr
+    assert not output.exists()

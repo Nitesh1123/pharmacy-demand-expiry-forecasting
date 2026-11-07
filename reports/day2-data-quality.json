@@ -1,0 +1,44 @@
+{
+  "checks_passed": true,
+  "start_date": "2022-01-01",
+  "end_date": "2023-12-31",
+  "rows": {
+    "products": 80,
+    "batches": 2003,
+    "sales": 59281,
+    "daily_sales": 58400,
+    "inventory_snapshots": 39062
+  },
+  "outcomes": {
+    "positive": 389,
+    "negative": 1063,
+    "censored": 551
+  },
+  "outcome_periods": {
+    "early": {
+      "start_date": "2022-01-01",
+      "end_date": "2023-05-31",
+      "positive": 262,
+      "negative": 743
+    },
+    "middle": {
+      "start_date": "2023-06-01",
+      "end_date": "2023-08-31",
+      "positive": 45,
+      "negative": 158
+    },
+    "late": {
+      "start_date": "2023-09-01",
+      "end_date": "2023-12-31",
+      "positive": 82,
+      "negative": 162
+    }
+  },
+  "stockout_product_days": 0,
+  "zero_sales_product_days": 31,
+  "limitations": [
+    "Synthetic stress scenarios; prevalence is not calibrated to real pharmacies.",
+    "Outcome periods are not leakage-safe model splits by themselves.",
+    "Repeated snapshots are correlated; count independent batches when evaluating."
+  ]
+}
