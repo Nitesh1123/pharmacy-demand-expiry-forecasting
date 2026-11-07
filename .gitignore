@@ -48,4 +48,4 @@ htmlcov/
 # Agent tools and skills
 .agents/
 skills-lock.json
-
+graphify-out/

@@ -4,14 +4,17 @@ An individual ML project for pharmacy inventory decision support. The intended
 outputs are a 30-day product demand forecast and batch expiry-risk alerts.
 Outputs are advisory inventory guidance, never medication or treatment advice.
 
-## Current status: Day 2 — November 7, 2026
+## Current status: Day 3 — November 8, 2026
 
 Implemented: reproducible synthetic data, weekly inventory snapshots, observed
-expiry outcomes, validation, tests, and Windows/Linux CI. Training, evaluation,
-model artifacts, and the inference app are **not implemented yet**.
+expiry outcomes, validation, point-in-time feature tables, chronological
+train/validation/test splits, an executed EDA notebook, leakage tests, and
+Windows/Linux CI. Model training, evaluation, model artifacts, and the inference
+app are **not implemented yet**.
 
-See the [PRD and schedule](docs/PRD.md), [data contract](data/README.md), and
-[Day 2 verification report](reports/day2.md). Submission is November 15, 2026;
+See the [PRD and schedule](docs/PRD.md), [data contract](data/README.md),
+[EDA notebook](notebooks/01_eda.ipynb), and the [Day 2](reports/day2.md) and
+[Day 3](reports/day3.md) reports. Submission is November 15, 2026;
 the individualized invitation specifies the exact time and timezone.
 
 ## Setup
@@ -27,6 +30,8 @@ py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 .\.venv\Scripts\python.exe src/data_generator.py
 .\.venv\Scripts\python.exe -m src.data_quality --report reports/day2-data-quality.json
+.\.venv\Scripts\python.exe -m src.features --report reports/day3-splits.json
+.\.venv\Scripts\jupyter.exe execute --inplace notebooks/01_eda.ipynb
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe -m pip check
 ```
@@ -38,6 +43,8 @@ python3.13 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 .venv/bin/python src/data_generator.py
 .venv/bin/python -m src.data_quality --report reports/day2-data-quality.json
+.venv/bin/python -m src.features --report reports/day3-splits.json
+.venv/bin/jupyter execute --inplace notebooks/01_eda.ipynb
 .venv/bin/python -m pytest -q
 .venv/bin/python -m pip check
 ```
@@ -63,8 +70,12 @@ for the later app; the current pipeline does not load `.env`.
 data_generator.py -> products / batches / sales / daily_sales / inventory_snapshots
                   -> manifest.json (configuration, versions, file hashes)
 data_quality.py   -> relational, temporal, balance and outcome checks -> report
+features.py       -> demand_features.csv (Sunday origin x product, 30-day target)
+                  -> expiry_features.csv (one near-expiry snapshot per batch)
+splits.py         -> shared calendar boundaries; targets/outcomes never cross them
+notebooks/01_eda  -> quality, demand patterns, label support, leakage analysis
 
-Next: EDA -> point-in-time features -> baseline/candidates -> saved model -> app
+Next: baseline/candidates -> validation selection -> test evaluation -> saved model -> app
 ```
 
 ## Evaluation plan
