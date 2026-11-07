@@ -1,7 +1,7 @@
 """
 Synthetic Pharmacy Dataset Generator
 Generates relational tables: products, batches, and sales with realistic seasonal demand,
-shelf-lives, and FIFO batch inventory tracking.
+shelf-lives, and first-expiry-first-out (FEFO) batch inventory tracking.
 """
 
 import os
@@ -14,6 +14,8 @@ def set_seed(seed=42):
     np.random.seed(seed)
 
 def generate_products(num_products=80):
+    if num_products <= 0:
+        raise ValueError("num_products must be positive")
     categories = {
         "Antibiotics": {"shelf_life": (365, 730), "price_range": (8.0, 35.0), "base_demand": 8},
         "Analgesics": {"shelf_life": (730, 1095), "price_range": (3.0, 15.0), "base_demand": 25},
@@ -46,6 +48,8 @@ def generate_products(num_products=80):
     return pd.DataFrame(products)
 
 def generate_batches_and_sales(products_df, start_date="2022-01-01", days=730):
+    if days <= 0 or products_df.empty:
+        raise ValueError("days and product count must be positive")
     start_dt = datetime.strptime(start_date, "%Y-%m-%d")
     date_range = [start_dt + timedelta(days=d) for d in range(days)]
     
@@ -59,7 +63,6 @@ def generate_batches_and_sales(products_df, start_date="2022-01-01", days=730):
     active_inventory = {row["product_id"]: [] for _, row in products_df.iterrows()}
     
     for current_date in date_range:
-        day_of_year = current_date.timetuple().tm_yday
         day_of_week = current_date.weekday() # 0 = Monday, 6 = Sunday
         month = current_date.month
         
@@ -81,21 +84,26 @@ def generate_batches_and_sales(products_df, start_date="2022-01-01", days=730):
             elif cat == "Vitamins_Supplements":
                 season_mult = 1.2 if month in [1, 2] else 1.0 # New year fitness spikes
             
-            # Check if restocking needed (inventory falls below 7 days expected demand)
+            # Reorder below ten days of baseline demand; unsolicited deliveries can overstock.
             total_remaining = sum(b["qty_remaining"] for b in active_inventory[pid] if b["expiry_dt"] > current_date)
             reorder_threshold = base * 10
             
             if total_remaining < reorder_threshold or np.random.rand() < 0.03: # periodic batch restock
                 shelf_life = prod["typical_shelf_life_days"]
-                # Some batches arrive with shorter shelf lives (simulating supply chain variation)
-                actual_shelf_life = int(shelf_life * np.random.uniform(0.6, 1.1))
+                # Stress scenarios, not estimates of real pharmacy prevalence.
+                short_dated = np.random.rand() < 0.3
+                actual_shelf_life = (int(np.random.randint(7, 61)) if short_dated
+                                    else int(shelf_life * np.random.uniform(0.6, 1.0)))
                 exp_date = current_date + timedelta(days=actual_shelf_life)
                 batch_size = int(base * np.random.randint(25, 60))
+                if np.random.rand() < 0.15:
+                    batch_size *= 3
                 
                 batch_obj = {
                     "batch_id": f"BAT-{batch_counter:05d}",
                     "product_id": pid,
-                    "manufacture_date": current_date.strftime("%Y-%m-%d"),
+                    "manufacture_date": (exp_date - timedelta(days=int(shelf_life))).strftime("%Y-%m-%d"),
+                    "received_date": current_date.strftime("%Y-%m-%d"),
                     "expiry_date": exp_date.strftime("%Y-%m-%d"),
                     "expiry_dt": exp_date,
                     "quantity_received": batch_size,
@@ -109,7 +117,7 @@ def generate_batches_and_sales(products_df, start_date="2022-01-01", days=730):
             expected_demand = max(1.0, base * season_mult * weekend_factor)
             daily_demand = np.random.poisson(lam=expected_demand)
             
-            # Sell from oldest non-expired batch (FIFO policy)
+            # Sell from the earliest-expiring valid batch (FEFO policy).
             active_batches = [b for b in active_inventory[pid] if b["expiry_dt"] > current_date and b["qty_remaining"] > 0]
             active_batches.sort(key=lambda x: x["expiry_dt"]) # oldest expiry first
             
@@ -137,6 +145,7 @@ def generate_batches_and_sales(products_df, start_date="2022-01-01", days=730):
             "batch_id": b["batch_id"],
             "product_id": b["product_id"],
             "manufacture_date": b["manufacture_date"],
+            "received_date": b["received_date"],
             "expiry_date": b["expiry_date"],
             "quantity_received": b["quantity_received"],
             "quantity_remaining": b["qty_remaining"]
