@@ -1,86 +1,81 @@
 # Pharmacy Medicine Demand & Expiry-Risk Forecasting
 
-Decision-support Machine Learning system for retail pharmacies:
-1. **Demand Forecasting (Regression):** Multi-horizon product-level demand prediction using chronological train/validation/test splits.
-2. **Expiry-Risk Flagging (Classification):** Predictive identification of batch lots at risk of expiring unsold before their expiry date.
+An individual ML project for pharmacy inventory decision support. The intended
+outputs are a 30-day product demand forecast and batch expiry-risk alerts.
+Outputs are advisory inventory guidance, never medication or treatment advice.
 
-> **Disclaimer:** This tool is strictly intended for **inventory operational decision-support** (stock rotation, markdown, reordering). It does not provide clinical, diagnostic, or treatment advice.
+## Current status: Day 2 — November 7, 2026
 
----
+Implemented: reproducible synthetic data, weekly inventory snapshots, observed
+expiry outcomes, validation, tests, and Windows/Linux CI. Training, evaluation,
+model artifacts, and the inference app are **not implemented yet**.
 
-## Architecture Overview
+See the [PRD and schedule](docs/PRD.md), [data contract](data/README.md), and
+[Day 2 verification report](reports/day2.md). Submission is November 15, 2026;
+the individualized invitation specifies the exact time and timezone.
 
-```
-                      ┌────────────────────────┐
-                      │  src/data_generator.py │
-                      └───────────┬────────────┘
-                                  │ (products, batches, sales)
-                                  ▼
-                      ┌────────────────────────┐
-                      │  01_eda.ipynb          │
-                      │  (stationarity, ACF)   │
-                      └───────────┬────────────┘
-                                  │
-                                  ▼
-                      ┌────────────────────────┐
-                      │  src/features.py       │
-                      │  (leakage-safe lags)   │
-                      └───────────┬────────────┘
-                                  │
-                                  ▼
-                      ┌────────────────────────┐
-                      │  src/train.py          │
-                      │  (baseline vs models)  │
-                      └───────────┬────────────┘
-                                  │ (models/*.joblib)
-                                  ▼
-                 ┌───────────────────────────────────┐
-                 │  Inference Services               │
-                 │  - FastAPI (app/api.py)           │
-                 │  - Streamlit (app/streamlit_app)  │
-                 └───────────────────────────────────┘
+## Setup
+
+Use **Python 3.13**. The dependency file pins the implemented data/testing stack,
+including transitive dependencies. Additional model and app packages will be
+added and tested as those features are implemented.
+
+Windows PowerShell (activation is not required):
+
+```powershell
+py -3.13 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe src/data_generator.py
+.\.venv\Scripts\python.exe -m src.data_quality --report reports/day2-data-quality.json
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m pip check
 ```
 
----
+Linux/macOS with Python 3.13 installed:
 
-## Quickstart
-
-### 1. Setup Environment
 ```bash
-python -m venv .venv
-# Windows:
-.venv\Scripts\activate
-# Linux/macOS:
-source .venv/bin/activate
-
-pip install -r requirements.txt
-cp .env.example .env
+python3.13 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python src/data_generator.py
+.venv/bin/python -m src.data_quality --report reports/day2-data-quality.json
+.venv/bin/python -m pytest -q
+.venv/bin/python -m pip check
 ```
 
-### 2. Generate Synthetic Data
-```bash
-python src/data_generator.py
+The generator defaults to seed 42, 80 products, and 730 days starting on
+2022-01-01. It writes five CSVs and a manifest with versions and SHA-256 hashes
+to `data/`. CSVs are ignored by Git; the default manifest and quality report
+are checked in so reviewers can compare their own generated data.
+
+For a separate experiment, use another directory:
+
+```powershell
+.\.venv\Scripts\python.exe src/data_generator.py --seed 7 --products 10 --days 90 --output_dir data/experiment
+.\.venv\Scripts\python.exe -m src.data_quality --data-dir data/experiment
 ```
 
-### 3. Run Training Pipeline
-```bash
-python src/train.py
+Generator configuration comes from CLI arguments. `.env.example` is reserved
+for the later app; the current pipeline does not load `.env`.
+
+## Data flow
+
+```text
+data_generator.py -> products / batches / sales / daily_sales / inventory_snapshots
+                  -> manifest.json (configuration, versions, file hashes)
+data_quality.py   -> relational, temporal, balance and outcome checks -> report
+
+Next: EDA -> point-in-time features -> baseline/candidates -> saved model -> app
 ```
 
-### 4. Launch Inference Interfaces
-- **FastAPI Model Server:**
-  ```bash
-  uvicorn app.api:app --host 0.0.0.0 --port 8000 --reload
-  ```
-- **Interactive Streamlit App:**
-  ```bash
-  streamlit run app/streamlit_app.py
-  ```
+## Evaluation plan
 
----
+- Demand: moving-average or seasonal-naive baseline plus justified candidates;
+  MAE, RMSE, WAPE on complete future 30-day windows.
+- Expiry: compare predicted alerts with actual leftovers at expiry; precision,
+  recall, F1 and confusion matrix. Unknown outcomes are not negatives.
+- Chronological origins across all products, with labels available before the
+  next evaluation boundary. See the PRD for simulator-only fields excluded from inputs.
 
-## Evaluation Metrics
-
-- **Demand Regression:** WAPE (Weighted Absolute Percentage Error), MAE, RMSE
-- **Expiry Classification:** Precision, Recall, F1-Score, Confusion Matrix
-- **Interpretability:** SHAP feature attribution summary
+Synthetic scenarios deliberately include short-dated and oversized deliveries.
+Their prevalence is not a real-world estimate. Successful tests establish data
+consistency, not forecasting accuracy or clinical suitability.
