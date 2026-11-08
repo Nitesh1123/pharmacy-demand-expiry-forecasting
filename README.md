@@ -17,7 +17,8 @@ implemented**; the app runs locally.
 See the [PRD and schedule](docs/PRD.md), [data contract](data/README.md),
 [EDA notebook](notebooks/01_eda.ipynb), and the [Day 2](reports/day2.md),
 [Day 3 data](reports/day3.md) and [Day 3 model comparison](reports/day3-models.md) reports, and the
-[held-out test evaluation](reports/test-evaluation.md). Submission is November 15, 2026;
+[held-out test evaluation](reports/test-evaluation.md). The full write-up is the
+[technical report](docs/technical_report.md). Submission is November 15, 2026;
 the individualized invitation specifies the exact time and timezone.
 
 ## Setup
@@ -37,6 +38,7 @@ py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m src.train --report reports/day3-validation.json
 .\.venv\Scripts\python.exe -m src.final_evaluation --report reports/test-evaluation.json
 .\.venv\Scripts\python.exe -m src.inference
+.\.venv\Scripts\python.exe -m src.report_figures
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe -m pip check
 .\.venv\Scripts\streamlit.exe run app/streamlit_app.py
@@ -54,6 +56,7 @@ python3.13 -m venv .venv
 .venv/bin/python -m src.train --report reports/day3-validation.json
 .venv/bin/python -m src.final_evaluation --report reports/test-evaluation.json
 .venv/bin/python -m src.inference
+.venv/bin/python -m src.report_figures
 .venv/bin/python -m pytest -q
 .venv/bin/python -m pip check
 .venv/bin/streamlit run app/streamlit_app.py
