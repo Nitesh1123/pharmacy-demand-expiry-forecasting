@@ -2,7 +2,8 @@
 
 Scope: baselines and first candidate models, compared on the **validation split
 only**. The test split has not been read by any training or scoring code. No model
-artifact is saved yet, and the alert probability cutoff is an untuned 0.5.
+artifact is saved yet. The two tables below use fixed defaults and a 0.5 probability
+cutoff; narrow tuning and the final selection follow in their own section.
 
 ## Delivered
 
@@ -43,6 +44,33 @@ The three models differ by one or two batches and their intervals overlap heavil
 so this validation set cannot separate them. The candidates have not shown an
 advantage over the transparent rule.
 
+## Narrow tuning and selection
+
+Hyperparameters and cutoffs were chosen on the same validation rows they are scored
+on, so these selected scores are optimistic. The test set is still unopened.
+
+**Demand.** Nine gradient-boosting settings were fitted on training rows and compared
+on validation MAE. The best used 400 iterations and 31 leaves: MAE 28.71, RMSE 40.88,
+WAPE 4.47%. Seasonal naive remains at MAE 28.92, RMSE 38.62, WAPE 4.51%.
+
+- Tuned boosting is nominally ahead on MAE and WAPE, and behind on RMSE. After tuning
+  on these rows, that is not evidence that it is better.
+- The best setting sits at the largest values in the grid. The grid was not widened,
+  because nine validation origins cannot support a broader search.
+
+**Expiry.** Each candidate's probability cutoff was chosen for the highest validation
+F1, on a 0.10 to 0.90 grid. The rule stays selected.
+
+| Model | Cutoff | TP | FP | FN | TN | F1 | F1 minus rule (95% paired interval) |
+|---|---:|---:|---:|---:|---:|---:|---|
+| Rule | n/a | 24 | 2 | 1 | 27 | 0.941 | n/a |
+| Gradient boosting | 0.55 | 24 | 2 | 1 | 27 | 0.941 | 0.000 to 0.000 |
+| Logistic regression | 0.55 | 23 | 1 | 2 | 28 | 0.939 | -0.062 to 0.055 |
+
+Neither candidate's interval is entirely above zero, even with a cutoff tuned on these
+rows, so the rule stays. At its cutoff, gradient boosting makes the same decision as the
+rule on all 54 batches, so its interval is exactly zero.
+
 ## Leakage and evaluation evidence
 
 - Changing validation labels leaves every fitted model's predictions unchanged.
@@ -54,7 +82,7 @@ advantage over the transparent rule.
 
 ## Verification
 
-- 49 tests pass and `pip check` is clean.
+- 55 tests pass and `pip check` is clean.
 - `python -m src.train --report reports/day3-validation.json` runs end to end.
 - CI runs training but does not compare this report byte for byte, because boosted
   model floats can differ slightly between operating systems.
@@ -62,7 +90,7 @@ advantage over the transparent rule.
 ## Limits
 
 - Results are from synthetic stress-test data and say nothing about real pharmacies.
-- Hyperparameters are fixed defaults; nothing has been tuned.
+- Tuning was deliberately narrow, and selected scores are optimistic.
 
 ## Next (Day 4, November 9)
 
@@ -73,5 +101,5 @@ advantage over the transparent rule.
 - Demand decision: serve gradient boosting as the trained artifact. Seasonal naive
   had slightly lower validation error, and the final report keeps it as the reference
   and shows both on the test set.
-- Choose any candidate alert cutoff on validation and keep tuning narrow.
-- Only then run the single test-set evaluation, with error analysis.
+- Run the single test-set evaluation with the selections above, with error analysis
+  and one explained prediction. This is planned for Day 6 (November 11).

@@ -14,8 +14,9 @@ Day 2 implemented synthetic generation, observed batch outcomes, weekly inventor
 snapshots, data-quality checks, tests, reproducible installation, and CI. Day 3 added
 the EDA notebook, point-in-time feature tables (`src/features.py`), the split rules
 below (`src/splits.py`), and truncation-based leakage tests. Day 3 also added baselines
-and candidate models scored on validation only (`src/train.py`, `src/metrics.py`).
-Alert threshold selection, test evaluation, artifacts, and the app remain planned.
+and candidate models scored on validation only (`src/train.py`, `src/metrics.py`),
+narrow validation tuning and the expiry selection check. Test evaluation, artifacts,
+and the app remain planned.
 
 ## Prediction contract
 
@@ -82,9 +83,10 @@ than fabricating labels or repeatedly tuning against final test outcomes.
 5. One Streamlit app loading a saved artifact is sufficient. FastAPI is optional.
    The app serves the gradient-boosting demand model and the transparent expiry
    rule. Gradient boosting was chosen as a trained, servable artifact although
-   seasonal naive had slightly lower validation error (MAE 28.92 vs 30.61); the
-   simulator repeats its seasonality exactly, which favours seasonal naive. Test
-   results report both.
+   seasonal naive had lower validation error before tuning (MAE 28.92 vs 30.61).
+   After narrow tuning on validation (400 iterations, 31 leaves) it reached MAE
+   28.71, with worse RMSE than seasonal naive. The simulator repeats its seasonality
+   exactly, which favours seasonal naive. Test results report both.
 6. A fresh clone must reproduce data, splits, training, evaluation and inference.
    Include preprocessing/inference tests as those components are implemented.
 

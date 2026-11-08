@@ -106,8 +106,144 @@
       }
     }
   },
+  "selection": {
+    "demand_boosting": {
+      "selected": {
+        "max_iter": 400,
+        "max_leaf_nodes": 31
+      },
+      "trials": [
+        {
+          "params": {
+            "max_iter": 100,
+            "max_leaf_nodes": 7
+          },
+          "mae": 37.8312,
+          "rmse": 57.7606,
+          "wape": 0.0589
+        },
+        {
+          "params": {
+            "max_iter": 100,
+            "max_leaf_nodes": 15
+          },
+          "mae": 33.7971,
+          "rmse": 49.936,
+          "wape": 0.0527
+        },
+        {
+          "params": {
+            "max_iter": 100,
+            "max_leaf_nodes": 31
+          },
+          "mae": 30.5011,
+          "rmse": 44.3167,
+          "wape": 0.0475
+        },
+        {
+          "params": {
+            "max_iter": 200,
+            "max_leaf_nodes": 7
+          },
+          "mae": 35.2075,
+          "rmse": 53.0154,
+          "wape": 0.0549
+        },
+        {
+          "params": {
+            "max_iter": 200,
+            "max_leaf_nodes": 15
+          },
+          "mae": 30.6062,
+          "rmse": 44.071,
+          "wape": 0.0477
+        },
+        {
+          "params": {
+            "max_iter": 200,
+            "max_leaf_nodes": 31
+          },
+          "mae": 29.0419,
+          "rmse": 41.4729,
+          "wape": 0.0452
+        },
+        {
+          "params": {
+            "max_iter": 400,
+            "max_leaf_nodes": 7
+          },
+          "mae": 31.4688,
+          "rmse": 45.1167,
+          "wape": 0.049
+        },
+        {
+          "params": {
+            "max_iter": 400,
+            "max_leaf_nodes": 15
+          },
+          "mae": 28.7694,
+          "rmse": 41.1428,
+          "wape": 0.0448
+        },
+        {
+          "params": {
+            "max_iter": 400,
+            "max_leaf_nodes": 31
+          },
+          "mae": 28.7127,
+          "rmse": 40.8795,
+          "wape": 0.0447
+        }
+      ]
+    },
+    "expiry_alert": {
+      "rule": {
+        "tp": 24,
+        "fp": 2,
+        "fn": 1,
+        "tn": 27,
+        "precision": 0.9231,
+        "recall": 0.96,
+        "f1": 0.9412
+      },
+      "candidates": {
+        "logistic_regression": {
+          "cutoff": 0.55,
+          "tp": 23,
+          "fp": 1,
+          "fn": 2,
+          "tn": 28,
+          "precision": 0.9583,
+          "recall": 0.92,
+          "f1": 0.9388,
+          "f1_minus_rule_interval_95": [
+            -0.0623,
+            0.0546
+          ],
+          "clearly_beats_rule": false
+        },
+        "gradient_boosting": {
+          "cutoff": 0.55,
+          "tp": 24,
+          "fp": 2,
+          "fn": 1,
+          "tn": 27,
+          "precision": 0.9231,
+          "recall": 0.96,
+          "f1": 0.9412,
+          "f1_minus_rule_interval_95": [
+            0.0,
+            0.0
+          ],
+          "clearly_beats_rule": false
+        }
+      },
+      "selected": "rule"
+    }
+  },
   "notes": [
     "Validation only; the test split has not been evaluated.",
+    "Cutoffs and hyperparameters are chosen on the same validation rows they are scored on, so selected scores are optimistic.",
     "Synthetic stress-test data; not evidence of real-pharmacy accuracy."
   ]
 }

@@ -9,8 +9,8 @@ Outputs are advisory inventory guidance, never medication or treatment advice.
 Implemented: reproducible synthetic data, weekly inventory snapshots, observed
 expiry outcomes, validation, point-in-time feature tables, chronological
 train/validation/test splits, an executed EDA notebook, leakage tests, baselines
-and candidate models compared on validation data, and Windows/Linux CI. Alert
-threshold selection, final test-set evaluation, saved model artifacts, and the
+and candidate models compared on validation data, narrow validation tuning, and
+Windows/Linux CI. Final test-set evaluation, saved model artifacts, and the
 inference app are **not implemented yet**.
 
 See the [PRD and schedule](docs/PRD.md), [data contract](data/README.md),
@@ -80,7 +80,7 @@ notebooks/01_eda  -> quality, demand patterns, label support, leakage analysis
 
 train.py          -> baselines and candidates fit on train, scored on validation only
 
-Next: alert threshold and selection -> single test evaluation -> saved model -> app
+Next: single test evaluation and error analysis -> saved model -> app
 ```
 
 ## Evaluation plan
