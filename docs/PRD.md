@@ -1,6 +1,6 @@
 # Pharmacy demand and expiry-risk project requirements
 
-Updated November 8, 2026 (Day 4). Source of acceptance criteria: the assessment
+Updated November 8, 2026 (Day 3). Source of acceptance criteria: the assessment
 document in the repository root. Submission date: November 15, 2026; use the
 invitation for the exact cutoff and timezone. Target completion: November 14.
 
@@ -13,7 +13,7 @@ Outputs are advisory stock rotation/replenishment guidance, never treatment advi
 Day 2 implemented synthetic generation, observed batch outcomes, weekly inventory
 snapshots, data-quality checks, tests, reproducible installation, and CI. Day 3 added
 the EDA notebook, point-in-time feature tables (`src/features.py`), the split rules
-below (`src/splits.py`), and truncation-based leakage tests. Day 4 added baselines
+below (`src/splits.py`), and truncation-based leakage tests. Day 3 also added baselines
 and candidate models scored on validation only (`src/train.py`, `src/metrics.py`).
 Alert threshold selection, test evaluation, artifacts, and the app remain planned.
 
@@ -90,17 +90,22 @@ than fabricating labels or repeatedly tuning against final test outcomes.
 
 ## Delivery plan
 
-| Date (2026) | Deliverable |
-|---|---|
-| Nov 7, Saturday | Correct data/outcomes, quality tests, reproducible setup, Day 2 PR |
-| Nov 8, Sunday | EDA, point-in-time features, temporal split implementation |
-| Nov 9, Monday | Baselines and first candidate models |
-| Nov 10, Tuesday | Candidate comparison and validation tuning |
-| Nov 11, Wednesday | Final evaluation, error analysis, explanation |
-| Nov 12, Thursday | Saved artifact and working inference app |
-| Nov 13, Friday | Reproduction and failure-case tests |
-| Nov 14, Saturday | Report, README, 3–5 minute video, accessible links |
-| Nov 15, Sunday | Verification and submission before the invitation cutoff |
+Day numbers count calendar days from the project start on November 6.
+
+| Day | Date (2026) | Deliverable |
+|---:|---|---|
+| 1 | Nov 6, Friday | Repository, requirements, first data generator |
+| 2 | Nov 7, Saturday | Correct data/outcomes, quality tests, reproducible setup, PR |
+| 3 | Nov 8, Sunday | EDA, point-in-time features, temporal split implementation |
+| 4 | Nov 9, Monday | Baselines and first candidate models |
+| 5 | Nov 10, Tuesday | Candidate comparison and validation tuning |
+| 6 | Nov 11, Wednesday | Final evaluation, error analysis, explanation |
+| 7 | Nov 12, Thursday | Saved artifact and working inference app |
+| 8 | Nov 13, Friday | Reproduction and failure-case tests |
+| 9 | Nov 14, Saturday | Report, README, 3–5 minute video, accessible links |
+| 10 | Nov 15, Sunday | Verification and submission before the invitation cutoff |
+
+Baselines and first candidates, planned for Day 4, were finished early on Day 3.
 
 ## Submission evidence
 

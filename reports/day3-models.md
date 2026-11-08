@@ -1,4 +1,4 @@
-# Day 4 verification — November 8, 2026
+# Day 3 model comparison — November 8, 2026
 
 Scope: baselines and first candidate models, compared on the **validation split
 only**. The test split has not been read by any training or scoring code. No model
@@ -10,7 +10,7 @@ artifact is saved yet, and the alert probability cutoff is an untuned 0.5.
   bootstrap 95% intervals over independent batches. WAPE, precision, recall and F1
   are reported as undefined (`null`), not zero, when their denominator is zero.
 - `src/train.py`: fits on training rows only and scores validation rows only.
-- [Machine-readable results](day4-validation.json).
+- [Machine-readable results](day3-validation.json).
 
 ## Demand: 720 validation rows (9 Sunday origins × 80 products)
 
@@ -55,7 +55,7 @@ advantage over the transparent rule.
 ## Verification
 
 - 49 tests pass and `pip check` is clean.
-- `python -m src.train --report reports/day4-validation.json` runs end to end.
+- `python -m src.train --report reports/day3-validation.json` runs end to end.
 - CI runs training but does not compare this report byte for byte, because boosted
   model floats can differ slightly between operating systems.
 
@@ -64,7 +64,7 @@ advantage over the transparent rule.
 - Results are from synthetic stress-test data and say nothing about real pharmacies.
 - Hyperparameters are fixed defaults; nothing has been tuned.
 
-## Next (Day 5)
+## Next (Day 4, November 9)
 
 - Expiry decision: the transparent rule stays the alert method unless a candidate
   clearly beats it on validation, meaning the 95% paired bootstrap interval for the

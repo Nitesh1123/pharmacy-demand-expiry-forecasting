@@ -4,7 +4,7 @@ An individual ML project for pharmacy inventory decision support. The intended
 outputs are a 30-day product demand forecast and batch expiry-risk alerts.
 Outputs are advisory inventory guidance, never medication or treatment advice.
 
-## Current status: Day 4 — November 8, 2026
+## Current status: Day 3 — November 8, 2026
 
 Implemented: reproducible synthetic data, weekly inventory snapshots, observed
 expiry outcomes, validation, point-in-time feature tables, chronological
@@ -15,7 +15,7 @@ inference app are **not implemented yet**.
 
 See the [PRD and schedule](docs/PRD.md), [data contract](data/README.md),
 [EDA notebook](notebooks/01_eda.ipynb), and the [Day 2](reports/day2.md),
-[Day 3](reports/day3.md) and [Day 4](reports/day4.md) reports. Submission is November 15, 2026;
+[Day 3 data](reports/day3.md) and [Day 3 model comparison](reports/day3-models.md) reports. Submission is November 15, 2026;
 the individualized invitation specifies the exact time and timezone.
 
 ## Setup
@@ -33,7 +33,7 @@ py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m src.data_quality --report reports/day2-data-quality.json
 .\.venv\Scripts\python.exe -m src.features --report reports/day3-splits.json
 .\.venv\Scripts\jupyter.exe execute --inplace notebooks/01_eda.ipynb
-.\.venv\Scripts\python.exe -m src.train --report reports/day4-validation.json
+.\.venv\Scripts\python.exe -m src.train --report reports/day3-validation.json
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe -m pip check
 ```
@@ -47,7 +47,7 @@ python3.13 -m venv .venv
 .venv/bin/python -m src.data_quality --report reports/day2-data-quality.json
 .venv/bin/python -m src.features --report reports/day3-splits.json
 .venv/bin/jupyter execute --inplace notebooks/01_eda.ipynb
-.venv/bin/python -m src.train --report reports/day4-validation.json
+.venv/bin/python -m src.train --report reports/day3-validation.json
 .venv/bin/python -m pytest -q
 .venv/bin/python -m pip check
 ```
