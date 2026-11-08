@@ -18,7 +18,8 @@ and candidate models scored on validation only (`src/train.py`, `src/metrics.py`
 narrow validation tuning, the expiry selection check, and a single held-out test
 evaluation (`src/final_evaluation.py`), the saved model (`src/inference.py`) and the
 Streamlit app (`app/streamlit_app.py`). The technical report is in
-`docs/technical_report.md`. Reproduction checks and the video remain planned.
+`docs/technical_report.md`. Reproduction and failure-case checks are in
+`reports/reproducibility.md`. The video remains planned.
 
 ## Prediction contract
 
@@ -109,8 +110,8 @@ Day numbers count calendar days from the project start on November 6.
 | 9 | Nov 14, Saturday | Report, README, 3–5 minute video, accessible links |
 | 10 | Nov 15, Sunday | Verification and submission before the invitation cutoff |
 
-Baselines, candidate comparison, tuning, final evaluation, the saved model and the
-app, planned for Days 4 to 7, were finished early on Day 3.
+Baselines, candidate comparison, tuning, final evaluation, the saved model, the
+app and reproduction checks, planned for Days 4 to 8, were finished early on Day 3.
 
 ## Submission evidence
 

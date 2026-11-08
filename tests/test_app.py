@@ -22,7 +22,7 @@ def tables():
 @pytest.fixture(scope="module")
 def paths(tables, tmp_path_factory):
     root = tmp_path_factory.mktemp("app")
-    for name in ("products", "batches", "daily_sales", "inventory_snapshots"):
+    for name in ("products", "batches", "sales", "daily_sales", "inventory_snapshots"):
         tables[name].to_csv(root / f"{name}.csv", index=False)
     return root, save_artifact(build_artifact(build_demand_features(tables), SELECTION, TEST_REPORT),
                                root / "model.joblib")

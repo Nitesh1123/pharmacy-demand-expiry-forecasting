@@ -47,8 +47,9 @@ st.warning("Advisory stock guidance for human review, not medication or treatmen
 
 try:
     tables = cached_tables(DATA_DIR)
-except FileNotFoundError:
-    st.error("Data not found. Run `python src/data_generator.py`, then `python -m src.features`.")
+except (FileNotFoundError, KeyError, ValueError):
+    st.error("Data is missing or failed its quality checks. Run `python src/data_generator.py`, "
+             "then `python -m src.features`.")
     st.stop()
 try:
     artifact = cached_artifact(MODEL_FILE)
@@ -57,6 +58,9 @@ except (FileNotFoundError, ValueError):
     st.stop()
 
 dates = available_dates(tables)
+if not dates:
+    st.error("Not enough history to forecast: the data needs at least 56 days of daily sales.")
+    st.stop()
 review_date = st.sidebar.selectbox("Review date (end of Sunday)", dates, index=len(dates) - 1,
                                    key="review_date")
 st.sidebar.caption("Forecasts use only data recorded through the end of this date.")

@@ -14,12 +14,26 @@ KEYS = {
 }
 
 
+COLUMNS = {
+    "products": ["product_id", "product_name", "category", "unit_price", "typical_shelf_life_days",
+                 "base_daily_demand"],
+    "batches": ["batch_id", "product_id", "manufacture_date", "received_date", "expiry_date",
+                "quantity_received", "quantity_remaining", "outcome_status", "outcome_date", "expiry_risk"],
+    "sales": ["sale_id", "sale_date", "product_id", "batch_id", "quantity_sold", "unit_price"],
+    "daily_sales": ["date", "product_id", "quantity_sold", "simulated_demand", "unmet_demand"],
+    "inventory_snapshots": ["as_of_date", "batch_id", "product_id", "quantity_remaining"],
+}
+
+
 def require(condition, message):
     if not condition:
         raise ValueError(message)
 
 
 def validate_dataset(tables):
+    for name, columns in COLUMNS.items():
+        missing = set(columns) - set(tables[name].columns)
+        require(not missing, f"{name}: missing columns {sorted(missing)}")
     for name, keys in KEYS.items():
         frame = tables[name]
         require(not frame.duplicated(keys).any(), f"{name}: duplicate key")

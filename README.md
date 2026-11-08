@@ -18,7 +18,8 @@ See the [PRD and schedule](docs/PRD.md), [data contract](data/README.md),
 [EDA notebook](notebooks/01_eda.ipynb), and the [Day 2](reports/day2.md),
 [Day 3 data](reports/day3.md) and [Day 3 model comparison](reports/day3-models.md) reports, and the
 [held-out test evaluation](reports/test-evaluation.md). The full write-up is the
-[technical report](docs/technical_report.md). Submission is November 15, 2026;
+[technical report](docs/technical_report.md), and [reproducibility.md](reports/reproducibility.md)
+records the fresh-clone and failure-case checks. Submission is November 15, 2026;
 the individualized invitation specifies the exact time and timezone.
 
 ## Setup
