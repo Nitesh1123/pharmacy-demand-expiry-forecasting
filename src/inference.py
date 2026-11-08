@@ -14,19 +14,21 @@ import numpy as np
 import pandas as pd
 import sklearn
 
+from src.data_quality import validate_dataset
 from src.features import (DEMAND_FEATURES, RISK_FRACTION, WARMUP_DAYS, build_demand_features,
                           expiry_features_at)
 from src.final_evaluation import SELECTED_DEMAND, _feature_sensitivity, typical_values
 from src.train import BOOSTING, _demand_boosting, _rows
 
 MODEL_PATH = Path("models/demand_gradient_boosting.joblib")
-TABLES = ("products", "batches", "daily_sales", "inventory_snapshots")
+TABLES = ("products", "batches", "sales", "daily_sales", "inventory_snapshots")
 REQUIRED_KEYS = {"model", "features", "params", "typical_values", "trained_through", "test_wape",
-                 "test_expiry_rule"}
+                 "test_expiry_rule", "scikit_learn"}
 
 
 def load_tables(data_dir):
     tables = {name: pd.read_csv(Path(data_dir) / f"{name}.csv") for name in TABLES}
+    validate_dataset(tables)  # refuse corrupt data instead of forecasting from it
     tables["batches"]["expiry_risk"] = tables["batches"].expiry_risk.astype("Int64")
     return tables
 
@@ -54,9 +56,16 @@ def load_artifact(path=MODEL_PATH):
     path = Path(path)
     if not path.exists():
         raise FileNotFoundError(path)
-    artifact = joblib.load(path)
-    if not REQUIRED_KEYS <= set(artifact) or artifact["features"] != list(DEMAND_FEATURES):
-        raise ValueError(f"{path} does not contain the expected model and features")
+    try:
+        artifact = joblib.load(path)
+    except Exception as exc:  # unpickling a damaged file can raise almost anything
+        raise ValueError(f"{path} is not a valid saved model") from exc
+    if (not isinstance(artifact, dict) or not REQUIRED_KEYS <= set(artifact)
+            or artifact["features"] != list(DEMAND_FEATURES)):
+        raise ValueError(f"{path} is not a valid saved model with the expected features")
+    if artifact["scikit_learn"] != sklearn.__version__:
+        raise ValueError(f"{path} was built with scikit-learn {artifact['scikit_learn']}, "
+                         f"but {sklearn.__version__} is installed; rebuild it")
     return artifact
 
 
@@ -122,6 +131,13 @@ def main():
     parser.add_argument("--selection", type=Path, default=Path("reports/day3-validation.json"))
     parser.add_argument("--test-report", type=Path, default=Path("reports/test-evaluation.json"))
     args = parser.parse_args()
+    try:
+        _run(args)
+    except (OSError, KeyError, ValueError) as exc:
+        parser.error(str(exc))
+
+
+def _run(args):
     selection = json.loads(args.selection.read_text(encoding="utf-8"))["selection"]
     test_report = json.loads(args.test_report.read_text(encoding="utf-8"))
     demand = pd.read_csv(args.data_dir / "demand_features.csv")

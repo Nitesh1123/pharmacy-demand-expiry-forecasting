@@ -168,6 +168,13 @@ def main():
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
     parser.add_argument("--report", type=Path)
     args = parser.parse_args()
+    try:
+        _run(args)
+    except (OSError, KeyError, ValueError) as exc:
+        parser.error(str(exc))
+
+
+def _run(args):
     demand = pd.read_csv(args.data_dir / "demand_features.csv")
     expiry = pd.read_csv(args.data_dir / "expiry_features.csv")
     report = {

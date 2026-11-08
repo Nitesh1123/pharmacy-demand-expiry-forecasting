@@ -143,6 +143,13 @@ def main():
     parser.add_argument("--selection", type=Path, default=Path("reports/day3-validation.json"))
     parser.add_argument("--report", type=Path)
     args = parser.parse_args()
+    try:
+        _run(args)
+    except (OSError, KeyError, ValueError) as exc:
+        parser.error(str(exc))
+
+
+def _run(args):
     selection = json.loads(args.selection.read_text(encoding="utf-8"))["selection"]
     report = evaluate_on_test(pd.read_csv(args.data_dir / "demand_features.csv"),
                               pd.read_csv(args.data_dir / "expiry_features.csv"),

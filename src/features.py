@@ -164,6 +164,13 @@ def main():
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
     parser.add_argument("--report", type=Path)
     args = parser.parse_args()
+    try:
+        _run(args)
+    except (OSError, KeyError, ValueError) as exc:
+        parser.error(str(exc))
+
+
+def _run(args):
     names = ["products", "batches", "daily_sales", "inventory_snapshots"]
     tables = {name: pd.read_csv(args.data_dir / f"{name}.csv") for name in names}
     tables["batches"]["expiry_risk"] = tables["batches"].expiry_risk.astype("Int64")
