@@ -343,6 +343,11 @@ Model reports are not compared byte for byte, because boosted-model floats can d
 between operating systems. The model file is not stored in Git and is rebuilt by
 `python -m src.inference`.
 
+A fresh clone following the README commands reproduced the data hashes and the quality, split,
+validation and test reports byte for byte. Damaged models, corrupt data and too little history
+are refused with clear messages. Re-running the pipeline on three other random seeds selected
+the rule every time. Details are in [reproducibility.md](../reports/reproducibility.md).
+
 ## 14. Responsible use
 
 **Representativeness.** The data is synthetic, for one store. Alert rates reflect deliberate stress
