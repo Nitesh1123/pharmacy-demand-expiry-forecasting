@@ -66,6 +66,10 @@ advantage over the transparent rule.
 
 ## Next (Day 5)
 
-- Choose the alert cutoff on validation, keep tuning narrow, and select one demand
-  and one expiry approach, keeping a baseline if no candidate earns its complexity.
+- Expiry decision: the transparent rule stays the alert method unless a candidate
+  clearly beats it on validation, meaning the 95% paired bootstrap interval for the
+  F1 difference is entirely above zero. On today's results no candidate has an F1
+  above the rule's.
+- Choose any candidate alert cutoff on validation, keep tuning narrow, and select one
+  demand approach.
 - Only then run the single test-set evaluation, with error analysis.

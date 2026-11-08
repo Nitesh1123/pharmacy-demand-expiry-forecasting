@@ -73,6 +73,10 @@ than fabricating labels or repeatedly tuning against final test outcomes.
    Report MAE, RMSE, WAPE for demand; precision, recall, F1 and confusion matrix
    for batch alerts. Define zero-denominator behavior. Choose the alert threshold
    on validation data and report independent batch support and uncertainty.
+   Expiry selection rule, fixed before the test set is opened: the transparent
+   projected-leftover rule stays the alert method unless a candidate clearly beats
+   it on validation, meaning the 95% paired bootstrap interval for the candidate's
+   F1 minus the rule's F1 is entirely above zero.
 4. Run final test evaluation after model selection. Explain a prediction and an
    error; state that synthetic performance does not demonstrate real-world accuracy.
 5. One Streamlit app loading a saved artifact is sufficient. FastAPI is optional.
