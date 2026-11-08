@@ -49,3 +49,7 @@ htmlcov/
 .agents/
 skills-lock.json
 graphify-out/
+
+# Assessment materials are kept local, not published
+04_Pharmacy_Medicine_Demand_and_Expiry_Risk_Forecasting.docx
+ROLE.txt
