@@ -1,6 +1,6 @@
 import pytest
 
-from src.metrics import alert_intervals, alert_metrics, demand_metrics
+from src.metrics import alert_intervals, alert_metrics, demand_metrics, paired_f1_difference
 
 
 def test_demand_metrics_known_values():
@@ -43,3 +43,16 @@ def test_intervals_are_repeatable_and_contain_the_estimate():
         low, high = first[name]
         assert 0 <= low <= estimate[name] <= high <= 1
         assert low < high
+
+
+def test_paired_difference_of_identical_alerts_is_zero():
+    y_true, alert = [1, 1, 0, 0, 1, 0], [1, 0, 0, 1, 1, 0]
+    assert paired_f1_difference(y_true, alert, alert) == [0.0, 0.0]
+
+
+def test_paired_difference_is_positive_when_one_alert_is_clearly_better():
+    y_true = [1] * 40 + [0] * 40
+    better, worse = y_true, [0] * 20 + [1] * 20 + [1] * 20 + [0] * 20
+    low, high = paired_f1_difference(y_true, better, worse)
+    assert 0 < low <= high
+    assert paired_f1_difference(y_true, better, worse) == [low, high]

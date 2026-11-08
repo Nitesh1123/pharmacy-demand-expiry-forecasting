@@ -8,6 +8,7 @@ import argparse
 import json
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import HistGradientBoostingClassifier, HistGradientBoostingRegressor
@@ -17,15 +18,19 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 from src.features import DEMAND_FEATURES, EXPIRY_FEATURES, RISK_FRACTION
-from src.metrics import alert_intervals, alert_metrics, demand_metrics
+from src.metrics import alert_intervals, alert_metrics, demand_metrics, paired_f1_difference
 from src.splits import HORIZON_DAYS
 
 SEED = 42
-ALERT_CUTOFF = 0.5  # shortcut: untuned default, chosen on validation in the tuning step
+ALERT_CUTOFF = 0.5  # untuned comparison point; select_expiry_alert chooses a cutoff on validation
+CUTOFFS = tuple(round(0.1 + 0.05 * step, 2) for step in range(17))
 # Fixed, modest settings. Early stopping stays off: it would draw a random, non-chronological
 # holdout from the training rows.
 BOOSTING = {"max_iter": 200, "learning_rate": 0.05, "max_leaf_nodes": 15,
             "early_stopping": False, "random_state": SEED}
+# Deliberately small: 9 validation origins cannot support a broad search.
+DEMAND_BOOSTING_GRID = [{"max_iter": iters, "max_leaf_nodes": leaves}
+                        for iters in (100, 200, 400) for leaves in (7, 15, 31)]
 
 
 def _encode(categorical, *numeric_steps):
@@ -49,13 +54,16 @@ def _rows(frame, split, features):
     return rows, rows[features]
 
 
+def _demand_boosting(params):
+    return make_pipeline(_encode(["category"]), HistGradientBoostingRegressor(**params))
+
+
 def fit_demand_models(demand):
     train, X = _rows(demand, "train", DEMAND_FEATURES)
     models = {
         # Month is one-hot here so a linear model can represent non-monotonic seasonality.
         "ridge": make_pipeline(_encode(["category", "month"], *_linear_steps()), Ridge(alpha=1.0)),
-        "gradient_boosting": make_pipeline(_encode(["category"]),
-                                           HistGradientBoostingRegressor(**BOOSTING)),
+        "gradient_boosting": _demand_boosting(BOOSTING),
     }
     return {name: model.fit(X, train.target_30d) for name, model in models.items()}
 
@@ -87,12 +95,55 @@ def demand_predictions(demand):
 
 def expiry_alerts(expiry):
     """Alert decision for every validation batch, one boolean column per model."""
-    validation, X = _rows(expiry, "validation", EXPIRY_FEATURES)
+    validation, _ = _rows(expiry, "validation", EXPIRY_FEATURES)
     alerts = pd.DataFrame({"rule": validation.projected_leftover_fraction > RISK_FRACTION},
                           index=validation.index)
-    for name, model in fit_expiry_models(expiry).items():
-        alerts[name] = model.predict_proba(X)[:, 1] >= ALERT_CUTOFF
+    for name, probability in _expiry_probabilities(expiry).items():
+        alerts[name] = probability >= ALERT_CUTOFF
     return alerts
+
+
+def _expiry_probabilities(expiry):
+    _, X = _rows(expiry, "validation", EXPIRY_FEATURES)
+    return pd.DataFrame({name: model.predict_proba(X)[:, 1]
+                         for name, model in fit_expiry_models(expiry).items()}, index=X.index)
+
+
+def best_cutoff(y_true, probability):
+    """Probability cutoff with the highest F1; ties go to the cutoff closest to 0.5."""
+    y_true, probability = np.asarray(y_true), np.asarray(probability)
+    return max(CUTOFFS, key=lambda c: (alert_metrics(y_true, probability >= c)["f1"] or 0,
+                                       -abs(c - 0.5)))
+
+
+def tune_demand_boosting(demand):
+    """Small grid fitted on training rows and compared on validation MAE."""
+    train, X = _rows(demand, "train", DEMAND_FEATURES)
+    validation, X_validation = _rows(demand, "validation", DEMAND_FEATURES)
+    trials = []
+    for params in DEMAND_BOOSTING_GRID:
+        model = _demand_boosting({**BOOSTING, **params}).fit(X, train.target_30d)
+        predicted = model.predict(X_validation).clip(min=0)
+        trials.append({"params": params, **demand_metrics(validation.target_30d, predicted)})
+    return {"selected": min(trials, key=lambda t: t["mae"])["params"], "trials": trials}
+
+
+def select_expiry_alert(expiry):
+    """Keep the rule unless a candidate's paired F1 advantage is entirely above zero."""
+    validation, _ = _rows(expiry, "validation", EXPIRY_FEATURES)
+    actual = validation.expiry_risk.astype(int)
+    rule = validation.projected_leftover_fraction > RISK_FRACTION
+    candidates = {}
+    for name, probability in _expiry_probabilities(expiry).items():
+        cutoff = best_cutoff(actual, probability)
+        alert = probability >= cutoff
+        interval = paired_f1_difference(actual, alert, rule)
+        candidates[name] = {"cutoff": cutoff, **alert_metrics(actual, alert),
+                            "f1_minus_rule_interval_95": interval,
+                            "clearly_beats_rule": interval[0] > 0}
+    winners = [name for name, result in candidates.items() if result["clearly_beats_rule"]]
+    return {"rule": alert_metrics(actual, rule), "candidates": candidates,
+            "selected": max(winners, key=lambda n: candidates[n]["f1"]) if winners else "rule"}
 
 
 def evaluate_demand(demand):
@@ -120,10 +171,16 @@ def main():
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
     parser.add_argument("--report", type=Path)
     args = parser.parse_args()
+    demand = pd.read_csv(args.data_dir / "demand_features.csv")
+    expiry = pd.read_csv(args.data_dir / "expiry_features.csv")
     report = {
-        "demand": evaluate_demand(pd.read_csv(args.data_dir / "demand_features.csv")),
-        "expiry": evaluate_expiry(pd.read_csv(args.data_dir / "expiry_features.csv")),
+        "demand": evaluate_demand(demand),
+        "expiry": evaluate_expiry(expiry),
+        "selection": {"demand_boosting": tune_demand_boosting(demand),
+                      "expiry_alert": select_expiry_alert(expiry)},
         "notes": ["Validation only; the test split has not been evaluated.",
+                  "Cutoffs and hyperparameters are chosen on the same validation rows they "
+                  "are scored on, so selected scores are optimistic.",
                   "Synthetic stress-test data; not evidence of real-pharmacy accuracy."],
     }
     output = json.dumps(json.loads(json.dumps(report), parse_float=lambda v: round(float(v), 4)),

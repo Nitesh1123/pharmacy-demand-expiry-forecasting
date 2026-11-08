@@ -4,7 +4,8 @@ import pytest
 from src.data_generator import generate_dataset
 from src.features import (DEMAND_FEATURES, EXPIRY_FEATURES, build_demand_features,
                           build_expiry_features)
-from src.train import (demand_predictions, evaluate_demand, evaluate_expiry, expiry_alerts,
+from src.train import (DEMAND_BOOSTING_GRID, best_cutoff, demand_predictions, evaluate_demand,
+                       evaluate_expiry, expiry_alerts, select_expiry_alert, tune_demand_boosting,
                        fit_demand_models, fit_expiry_models)
 
 
@@ -77,3 +78,38 @@ def test_reports_are_repeatable_and_cover_baselines_and_candidates(demand, expir
 def test_missing_validation_rows_are_rejected(demand):
     with pytest.raises(ValueError, match="validation"):
         evaluate_demand(demand[demand.split == "train"])
+
+
+def test_best_cutoff_maximises_f1_and_breaks_ties_towards_one_half():
+    assert best_cutoff([1, 1, 0, 0], [0.9, 0.8, 0.3, 0.2]) == 0.5  # every cutoff in (0.3, 0.8] ties
+    assert best_cutoff([1, 1, 0, 0], [0.3, 0.25, 0.2, 0.1]) == 0.25
+
+
+def test_demand_tuning_picks_lowest_validation_mae_and_ignores_test_rows(demand):
+    tuned = tune_demand_boosting(demand)
+    assert len(tuned["trials"]) == len(DEMAND_BOOSTING_GRID)
+    best = min(tuned["trials"], key=lambda t: t["mae"])
+    assert tuned["selected"] == best["params"]
+    assert tuned == tune_demand_boosting(demand[demand.split != "test"])
+
+
+def test_expiry_selection_keeps_rule_unless_a_candidate_clears_the_paired_bar(expiry):
+    result = select_expiry_alert(expiry)
+    winners = [n for n, c in result["candidates"].items() if c["clearly_beats_rule"]]
+    if winners:
+        assert result["selected"] in winners
+    else:
+        assert result["selected"] == "rule"
+    for candidate in result["candidates"].values():
+        low, _ = candidate["f1_minus_rule_interval_95"]
+        assert candidate["clearly_beats_rule"] == (low > 0)
+    assert result == select_expiry_alert(expiry[expiry.split != "test"])
+
+
+def test_expiry_selection_switches_only_when_a_candidate_clears_the_bar(expiry, monkeypatch):
+    monkeypatch.setattr("src.train.paired_f1_difference", lambda *_: [0.01, 0.2])
+    result = select_expiry_alert(expiry)
+    best = max(result["candidates"], key=lambda n: result["candidates"][n]["f1"])
+    assert result["selected"] == best
+    monkeypatch.setattr("src.train.paired_f1_difference", lambda *_: [0.0, 0.2])
+    assert select_expiry_alert(expiry)["selected"] == "rule"

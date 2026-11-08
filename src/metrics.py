@@ -25,6 +25,20 @@ def alert_metrics(y_true, alert):
             "recall": _ratio(tp, tp + fn), "f1": _ratio(2 * tp, 2 * tp + fp + fn)}
 
 
+def paired_f1_difference(y_true, alert_a, alert_b, resamples=1000, seed=42):
+    """95% bootstrap interval for F1(a) - F1(b), resampling the same batches for both."""
+    y_true, alert_a, alert_b = (np.asarray(v, dtype=bool) for v in (y_true, alert_a, alert_b))
+    rng = np.random.default_rng(seed)
+    differences = []
+    for _ in range(resamples):
+        chosen = rng.integers(0, len(y_true), len(y_true))
+        f1_a = alert_metrics(y_true[chosen], alert_a[chosen])["f1"]
+        f1_b = alert_metrics(y_true[chosen], alert_b[chosen])["f1"]
+        if f1_a is not None and f1_b is not None:
+            differences.append(f1_a - f1_b)
+    return [float(q) for q in np.percentile(differences, [2.5, 97.5])]
+
+
 def alert_intervals(y_true, alert, resamples=1000, seed=42):
     """95% percentile bootstrap intervals, resampling independent batches."""
     y_true, alert = np.asarray(y_true, dtype=bool), np.asarray(alert, dtype=bool)
