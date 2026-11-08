@@ -101,5 +101,5 @@ rule on all 54 batches, so its interval is exactly zero.
 - Demand decision: serve gradient boosting as the trained artifact. Seasonal naive
   had slightly lower validation error, and the final report keeps it as the reference
   and shows both on the test set.
-- Run the single test-set evaluation with the selections above, with error analysis
-  and one explained prediction. This is planned for Day 6 (November 11).
+- The single test-set evaluation has since been run with the selections above; see
+  the [held-out test evaluation](test-evaluation.md).

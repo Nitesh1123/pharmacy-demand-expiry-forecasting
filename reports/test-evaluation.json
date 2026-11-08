@@ -1,0 +1,529 @@
+{
+  "evaluated_split": "test",
+  "demand": {
+    "test_rows": 1040,
+    "test_origins": 13,
+    "selected": "gradient_boosting_tuned",
+    "selected_params": {
+      "max_iter": 400,
+      "max_leaf_nodes": 31
+    },
+    "models": {
+      "moving_average_28d": {
+        "mae": 43.5521,
+        "rmse": 78.6127,
+        "wape": 0.0715
+      },
+      "seasonal_naive": {
+        "mae": 27.5135,
+        "rmse": 35.5605,
+        "wape": 0.0452
+      },
+      "ridge": {
+        "mae": 49.3753,
+        "rmse": 74.6389,
+        "wape": 0.0811
+      },
+      "gradient_boosting_tuned": {
+        "mae": 26.7435,
+        "rmse": 36.009,
+        "wape": 0.0439
+      }
+    },
+    "error_analysis": {
+      "mean_actual_minus_predicted": 0.3824,
+      "by_category": [
+        {
+          "category": "Analgesics",
+          "rows": 117,
+          "mae": 40.8985,
+          "rmse": 52.3618,
+          "wape": 0.0365,
+          "seasonal_naive_wape": 0.0395
+        },
+        {
+          "category": "Antibiotics",
+          "rows": 260,
+          "mae": 17.0724,
+          "rmse": 21.9573,
+          "wape": 0.0571,
+          "seasonal_naive_wape": 0.0605
+        },
+        {
+          "category": "Antipyretics",
+          "rows": 117,
+          "mae": 42.6146,
+          "rmse": 55.3571,
+          "wape": 0.0387,
+          "seasonal_naive_wape": 0.0322
+        },
+        {
+          "category": "Cardiovascular",
+          "rows": 273,
+          "mae": 24.0671,
+          "rmse": 30.1976,
+          "wape": 0.0455,
+          "seasonal_naive_wape": 0.0513
+        },
+        {
+          "category": "Respiratory",
+          "rows": 130,
+          "mae": 29.5712,
+          "rmse": 37.231,
+          "wape": 0.0435,
+          "seasonal_naive_wape": 0.041
+        },
+        {
+          "category": "Vitamins_Supplements",
+          "rows": 143,
+          "mae": 22.299,
+          "rmse": 28.3206,
+          "wape": 0.0507,
+          "seasonal_naive_wape": 0.0565
+        }
+      ],
+      "by_origin": [
+        {
+          "origin_date": "2023-09-03",
+          "rows": 80,
+          "mae": 27.1174,
+          "rmse": 39.411,
+          "wape": 0.0456,
+          "seasonal_naive_wape": 0.0416
+        },
+        {
+          "origin_date": "2023-09-10",
+          "rows": 80,
+          "mae": 27.5491,
+          "rmse": 38.8695,
+          "wape": 0.0464,
+          "seasonal_naive_wape": 0.0437
+        },
+        {
+          "origin_date": "2023-09-17",
+          "rows": 80,
+          "mae": 25.5357,
+          "rmse": 36.8339,
+          "wape": 0.0427,
+          "seasonal_naive_wape": 0.0504
+        },
+        {
+          "origin_date": "2023-09-24",
+          "rows": 80,
+          "mae": 26.9693,
+          "rmse": 34.5856,
+          "wape": 0.0452,
+          "seasonal_naive_wape": 0.0496
+        },
+        {
+          "origin_date": "2023-10-01",
+          "rows": 80,
+          "mae": 23.9082,
+          "rmse": 31.5362,
+          "wape": 0.04,
+          "seasonal_naive_wape": 0.0474
+        },
+        {
+          "origin_date": "2023-10-08",
+          "rows": 80,
+          "mae": 26.5688,
+          "rmse": 34.2527,
+          "wape": 0.0442,
+          "seasonal_naive_wape": 0.0457
+        },
+        {
+          "origin_date": "2023-10-15",
+          "rows": 80,
+          "mae": 27.7451,
+          "rmse": 35.4095,
+          "wape": 0.0465,
+          "seasonal_naive_wape": 0.0442
+        },
+        {
+          "origin_date": "2023-10-22",
+          "rows": 80,
+          "mae": 27.154,
+          "rmse": 33.5379,
+          "wape": 0.0455,
+          "seasonal_naive_wape": 0.0463
+        },
+        {
+          "origin_date": "2023-10-29",
+          "rows": 80,
+          "mae": 28.514,
+          "rmse": 36.48,
+          "wape": 0.0479,
+          "seasonal_naive_wape": 0.0463
+        },
+        {
+          "origin_date": "2023-11-05",
+          "rows": 80,
+          "mae": 26.7631,
+          "rmse": 37.4154,
+          "wape": 0.0441,
+          "seasonal_naive_wape": 0.0471
+        },
+        {
+          "origin_date": "2023-11-12",
+          "rows": 80,
+          "mae": 24.2722,
+          "rmse": 32.2256,
+          "wape": 0.0387,
+          "seasonal_naive_wape": 0.0425
+        },
+        {
+          "origin_date": "2023-11-19",
+          "rows": 80,
+          "mae": 29.5261,
+          "rmse": 42.4674,
+          "wape": 0.0456,
+          "seasonal_naive_wape": 0.042
+        },
+        {
+          "origin_date": "2023-11-26",
+          "rows": 80,
+          "mae": 26.0419,
+          "rmse": 33.4727,
+          "wape": 0.0392,
+          "seasonal_naive_wape": 0.0414
+        }
+      ],
+      "permutation_importance": [
+        {
+          "feature": "sales_14d",
+          "mae_increase": 82.3258
+        },
+        {
+          "feature": "sales_56d",
+          "mae_increase": 70.0445
+        },
+        {
+          "feature": "sales_28d",
+          "mae_increase": 63.5782
+        },
+        {
+          "feature": "sales_7d",
+          "mae_increase": 54.305
+        },
+        {
+          "feature": "sales_same_window_last_year",
+          "mae_increase": 29.8017
+        },
+        {
+          "feature": "week_of_year",
+          "mae_increase": 10.4295
+        },
+        {
+          "feature": "category",
+          "mae_increase": 7.5229
+        },
+        {
+          "feature": "unit_price",
+          "mae_increase": 2.5505
+        },
+        {
+          "feature": "typical_shelf_life_days",
+          "mae_increase": 1.9856
+        },
+        {
+          "feature": "month",
+          "mae_increase": 0.6226
+        },
+        {
+          "feature": "on_hand_units",
+          "mae_increase": 0.4103
+        },
+        {
+          "feature": "std_28d",
+          "mae_increase": 0.0446
+        },
+        {
+          "feature": "mean_28d",
+          "mae_increase": 0.0
+        },
+        {
+          "feature": "zero_days_28d",
+          "mae_increase": 0.0
+        }
+      ],
+      "largest_error": {
+        "origin_date": "2023-11-19",
+        "product_id": "MED-051",
+        "category": "Antipyretics",
+        "actual": 1610.0,
+        "predicted": 1424.5043,
+        "seasonal_naive": 1593.0,
+        "feature_sensitivity": [
+          {
+            "feature": "sales_14d",
+            "value": 561.0,
+            "typical_train_value": 231.0,
+            "prediction_change_from_actual_value": 266.5838
+          },
+          {
+            "feature": "sales_7d",
+            "value": 275.0,
+            "typical_train_value": 115.0,
+            "prediction_change_from_actual_value": 254.7477
+          },
+          {
+            "feature": "sales_56d",
+            "value": 2309.0,
+            "typical_train_value": 932.0,
+            "prediction_change_from_actual_value": 145.5707
+          },
+          {
+            "feature": "week_of_year",
+            "value": 46,
+            "typical_train_value": 21.5,
+            "prediction_change_from_actual_value": 115.7563
+          },
+          {
+            "feature": "unit_price",
+            "value": 7.72,
+            "typical_train_value": 20.875,
+            "prediction_change_from_actual_value": 90.6294
+          }
+        ]
+      }
+    }
+  },
+  "expiry": {
+    "test_batches": 103,
+    "positive": 71,
+    "negative": 32,
+    "selected": "rule",
+    "models": {
+      "rule": {
+        "tp": 67,
+        "fp": 5,
+        "fn": 4,
+        "tn": 27,
+        "precision": 0.9306,
+        "recall": 0.9437,
+        "f1": 0.9371,
+        "intervals_95": {
+          "precision": [
+            0.8657,
+            0.9851
+          ],
+          "recall": [
+            0.8889,
+            0.9872
+          ],
+          "f1": [
+            0.8919,
+            0.971
+          ]
+        }
+      },
+      "logistic_regression": {
+        "tp": 66,
+        "fp": 5,
+        "fn": 5,
+        "tn": 27,
+        "precision": 0.9296,
+        "recall": 0.9296,
+        "f1": 0.9296,
+        "intervals_95": {
+          "precision": [
+            0.863,
+            0.9851
+          ],
+          "recall": [
+            0.8676,
+            0.9857
+          ],
+          "f1": [
+            0.8811,
+            0.9673
+          ]
+        }
+      },
+      "gradient_boosting": {
+        "tp": 67,
+        "fp": 3,
+        "fn": 4,
+        "tn": 29,
+        "precision": 0.9571,
+        "recall": 0.9437,
+        "f1": 0.9504,
+        "intervals_95": {
+          "precision": [
+            0.8974,
+            1.0
+          ],
+          "recall": [
+            0.8889,
+            0.9872
+          ],
+          "f1": [
+            0.9091,
+            0.9796
+          ]
+        }
+      }
+    },
+    "error_analysis": {
+      "rule_errors": [
+        {
+          "kind": "false_alarm",
+          "as_of_date": "2023-09-24",
+          "batch_id": "BAT-01765",
+          "product_id": "MED-031",
+          "category": "Vitamins_Supplements",
+          "days_to_expiry": 59,
+          "quantity_received": 833,
+          "quantity_remaining": 833,
+          "units_ahead_fefo": 1196,
+          "mean_28d": 17.0714,
+          "projected_leftover_fraction": 1.0,
+          "outcome_status": "sold_out",
+          "projected_sellable": 0.0,
+          "actual_sold_after_snapshot": 833,
+          "actual_unsold_fraction": 0.0
+        },
+        {
+          "kind": "false_alarm",
+          "as_of_date": "2023-10-29",
+          "batch_id": "BAT-01837",
+          "product_id": "MED-038",
+          "category": "Respiratory",
+          "days_to_expiry": 32,
+          "quantity_received": 759,
+          "quantity_remaining": 759,
+          "units_ahead_fefo": 2856,
+          "mean_28d": 23.4643,
+          "projected_leftover_fraction": 1.0,
+          "outcome_status": "expired",
+          "projected_sellable": 0.0,
+          "actual_sold_after_snapshot": 631,
+          "actual_unsold_fraction": 0.1686
+        },
+        {
+          "kind": "false_alarm",
+          "as_of_date": "2023-10-22",
+          "batch_id": "BAT-01313",
+          "product_id": "MED-029",
+          "category": "Antibiotics",
+          "days_to_expiry": 55,
+          "quantity_received": 754,
+          "quantity_remaining": 754,
+          "units_ahead_fefo": 568,
+          "mean_28d": 13.0357,
+          "projected_leftover_fraction": 0.8024,
+          "outcome_status": "expired",
+          "projected_sellable": 148.9643,
+          "actual_sold_after_snapshot": 712,
+          "actual_unsold_fraction": 0.0557
+        },
+        {
+          "kind": "false_alarm",
+          "as_of_date": "2023-11-19",
+          "batch_id": "BAT-01901",
+          "product_id": "MED-051",
+          "category": "Antipyretics",
+          "days_to_expiry": 34,
+          "quantity_received": 1248,
+          "quantity_remaining": 1248,
+          "units_ahead_fefo": 871,
+          "mean_28d": 39.8929,
+          "projected_leftover_fraction": 0.6111,
+          "outcome_status": "sold_out",
+          "projected_sellable": 485.3571,
+          "actual_sold_after_snapshot": 1248,
+          "actual_unsold_fraction": 0.0
+        },
+        {
+          "kind": "missed",
+          "as_of_date": "2023-10-15",
+          "batch_id": "BAT-01803",
+          "product_id": "MED-054",
+          "category": "Analgesics",
+          "days_to_expiry": 50,
+          "quantity_received": 950,
+          "quantity_remaining": 811,
+          "units_ahead_fefo": 0,
+          "mean_28d": 26.1786,
+          "projected_leftover_fraction": 0.0,
+          "outcome_status": "expired",
+          "projected_sellable": 1308.9286,
+          "actual_sold_after_snapshot": 297,
+          "actual_unsold_fraction": 0.5411
+        },
+        {
+          "kind": "false_alarm",
+          "as_of_date": "2023-10-01",
+          "batch_id": "BAT-01192",
+          "product_id": "MED-059",
+          "category": "Antibiotics",
+          "days_to_expiry": 54,
+          "quantity_received": 742,
+          "quantity_remaining": 742,
+          "units_ahead_fefo": 353,
+          "mean_28d": 13.6071,
+          "projected_leftover_fraction": 0.4855,
+          "outcome_status": "expired",
+          "projected_sellable": 381.7857,
+          "actual_sold_after_snapshot": 636,
+          "actual_unsold_fraction": 0.1429
+        },
+        {
+          "kind": "missed",
+          "as_of_date": "2023-10-01",
+          "batch_id": "BAT-01779",
+          "product_id": "MED-051",
+          "category": "Antipyretics",
+          "days_to_expiry": 54,
+          "quantity_received": 2301,
+          "quantity_remaining": 2252,
+          "units_ahead_fefo": 0,
+          "mean_28d": 43.0,
+          "projected_leftover_fraction": 0.0,
+          "outcome_status": "expired",
+          "projected_sellable": 2322.0,
+          "actual_sold_after_snapshot": 1560,
+          "actual_unsold_fraction": 0.3007
+        },
+        {
+          "kind": "missed",
+          "as_of_date": "2023-09-03",
+          "batch_id": "BAT-01712",
+          "product_id": "MED-028",
+          "category": "Antipyretics",
+          "days_to_expiry": 19,
+          "quantity_received": 918,
+          "quantity_remaining": 881,
+          "units_ahead_fefo": 0,
+          "mean_28d": 45.5,
+          "projected_leftover_fraction": 0.018,
+          "outcome_status": "expired",
+          "projected_sellable": 864.5,
+          "actual_sold_after_snapshot": 657,
+          "actual_unsold_fraction": 0.244
+        },
+        {
+          "kind": "missed",
+          "as_of_date": "2023-09-24",
+          "batch_id": "BAT-01762",
+          "product_id": "MED-039",
+          "category": "Antibiotics",
+          "days_to_expiry": 25,
+          "quantity_received": 280,
+          "quantity_remaining": 253,
+          "units_ahead_fefo": 0,
+          "mean_28d": 8.4643,
+          "projected_leftover_fraction": 0.1478,
+          "outcome_status": "expired",
+          "projected_sellable": 211.6071,
+          "actual_sold_after_snapshot": 194,
+          "actual_unsold_fraction": 0.2107
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Selections were locked on validation before this evaluation.",
+    "Synthetic stress-test data; not evidence of real-pharmacy accuracy."
+  ]
+}

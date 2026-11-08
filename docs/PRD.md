@@ -15,8 +15,8 @@ snapshots, data-quality checks, tests, reproducible installation, and CI. Day 3 
 the EDA notebook, point-in-time feature tables (`src/features.py`), the split rules
 below (`src/splits.py`), and truncation-based leakage tests. Day 3 also added baselines
 and candidate models scored on validation only (`src/train.py`, `src/metrics.py`),
-narrow validation tuning and the expiry selection check. Test evaluation, artifacts,
-and the app remain planned.
+narrow validation tuning, the expiry selection check, and a single held-out test
+evaluation (`src/final_evaluation.py`). Artifacts and the app remain planned.
 
 ## Prediction contract
 
@@ -107,7 +107,8 @@ Day numbers count calendar days from the project start on November 6.
 | 9 | Nov 14, Saturday | Report, README, 3–5 minute video, accessible links |
 | 10 | Nov 15, Sunday | Verification and submission before the invitation cutoff |
 
-Baselines and first candidates, planned for Day 4, were finished early on Day 3.
+Baselines, candidate comparison, tuning and final evaluation, planned for Days 4 to
+6, were finished early on Day 3.
 
 ## Submission evidence
 
