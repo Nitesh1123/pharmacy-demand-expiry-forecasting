@@ -1,7 +1,7 @@
 # Pharmacy demand and expiry-risk project requirements
 
 Updated November 8, 2026 (Day 3). Source of acceptance criteria: the assessment
-document in the repository root. Submission date: November 15, 2026; use the
+brief supplied with the invitation. Submission date: November 15, 2026; use the
 invitation for the exact cutoff and timezone. Target completion: November 14.
 
 ## Scope and current status
