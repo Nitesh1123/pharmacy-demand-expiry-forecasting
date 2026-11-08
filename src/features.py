@@ -91,13 +91,28 @@ def build_demand_features(tables, labeled_only=True):
     return rows[columns].sort_values(["origin_date", "product_id"]).reset_index(drop=True)
 
 
-def build_expiry_features(tables):
-    """One row per batch: its first Sunday snapshot within 60 days of expiry."""
+def _near_expiry_snapshots(tables):
     snaps = _snapshots(tables)
     as_of = pd.to_datetime(snaps.as_of_date)
     snaps["days_to_expiry"] = (pd.to_datetime(snaps.expiry_date) - as_of).dt.days
-    snaps = snaps[snaps.days_to_expiry <= NEAR_EXPIRY_DAYS]
-    snaps = snaps.sort_values(["batch_id", "as_of_date"]).drop_duplicates("batch_id")
+    return snaps[snaps.days_to_expiry <= NEAR_EXPIRY_DAYS]
+
+
+def build_expiry_features(tables):
+    """One row per batch: its first Sunday snapshot within 60 days of expiry."""
+    snaps = _near_expiry_snapshots(tables)
+    return _expiry_rows(tables, snaps.sort_values(["batch_id", "as_of_date"]).drop_duplicates("batch_id"))
+
+
+def expiry_features_at(tables, as_of_date):
+    """Every batch within 60 days of expiry at one snapshot date, for inference; no labels."""
+    snaps = _near_expiry_snapshots(tables)
+    rows = _expiry_rows(tables, snaps[snaps.as_of_date == as_of_date])
+    return rows.drop(columns=[*EXPIRY_LABELS, "split"])
+
+
+def _expiry_rows(tables, snaps):
+    snaps = snaps.copy()
     as_of = pd.to_datetime(snaps.as_of_date)
     snaps["days_since_received"] = (as_of - pd.to_datetime(snaps.received_date)).dt.days
     snaps["fraction_remaining"] = snaps.quantity_remaining / snaps.quantity_received
