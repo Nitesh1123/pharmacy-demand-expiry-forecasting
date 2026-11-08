@@ -10,8 +10,9 @@ Implemented: reproducible synthetic data, weekly inventory snapshots, observed
 expiry outcomes, validation, point-in-time feature tables, chronological
 train/validation/test splits, an executed EDA notebook, leakage tests, baselines
 and candidate models compared on validation data, narrow validation tuning, a
-single held-out test evaluation with error analysis, and Windows/Linux CI. Saved
-model artifacts and the inference app are **not implemented yet**.
+single held-out test evaluation with error analysis, a saved demand model, a
+Streamlit inference app, and Windows/Linux CI. A deployed live demo is **not
+implemented**; the app runs locally.
 
 See the [PRD and schedule](docs/PRD.md), [data contract](data/README.md),
 [EDA notebook](notebooks/01_eda.ipynb), and the [Day 2](reports/day2.md),
@@ -21,9 +22,8 @@ the individualized invitation specifies the exact time and timezone.
 
 ## Setup
 
-Use **Python 3.13**. The dependency file pins the implemented data, testing, notebook and model-training stack,
-including transitive dependencies. Additional app packages will be
-added and tested as those features are implemented.
+Use **Python 3.13**. The dependency file pins the implemented data, testing,
+notebook, model-training and Streamlit stack, including transitive dependencies.
 
 Windows PowerShell (activation is not required):
 
@@ -36,6 +36,8 @@ py -3.13 -m venv .venv
 .\.venv\Scripts\jupyter.exe execute --inplace notebooks/01_eda.ipynb
 .\.venv\Scripts\python.exe -m src.train --report reports/day3-validation.json
 .\.venv\Scripts\python.exe -m src.final_evaluation --report reports/test-evaluation.json
+.\.venv\Scripts\python.exe -m src.inference
+.\.venv\Scripts\streamlit.exe run app/streamlit_app.py
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe -m pip check
 ```
@@ -51,6 +53,8 @@ python3.13 -m venv .venv
 .venv/bin/jupyter execute --inplace notebooks/01_eda.ipynb
 .venv/bin/python -m src.train --report reports/day3-validation.json
 .venv/bin/python -m src.final_evaluation --report reports/test-evaluation.json
+.venv/bin/python -m src.inference
+.venv/bin/streamlit run app/streamlit_app.py
 .venv/bin/python -m pytest -q
 .venv/bin/python -m pip check
 ```
@@ -67,8 +71,8 @@ For a separate experiment, use another directory:
 .\.venv\Scripts\python.exe -m src.data_quality --data-dir data/experiment
 ```
 
-Generator configuration comes from CLI arguments. `.env.example` is reserved
-for the later app; the current pipeline does not load `.env`.
+Generator configuration comes from CLI arguments. The pipeline and app
+do not load `.env`; `.env.example` holds placeholders only.
 
 ## Data flow
 
@@ -85,7 +89,8 @@ train.py          -> baselines and candidates fit on train, scored on validation
 
 final_evaluation.py -> locked selections scored once on the test split
 
-Next: saved model -> Streamlit app
+inference.py      -> saves the tested demand model; forecasts and expiry guidance
+app/streamlit_app -> loads the saved model; advisory review by Sunday date
 ```
 
 ## Evaluation plan
