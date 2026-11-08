@@ -67,6 +67,24 @@ if unmet demand appears in another configuration. Features use only data through
 the end-of-day prediction origin. Weekly snapshots of one batch are correlated;
 evaluation must report independent batch counts, not only snapshot-row counts.
 
+## Derived feature tables
+
+`python -m src.features` writes two ignored CSVs and a split summary
+(`reports/day3-splits.json`):
+
+- `demand_features.csv`: one row per Sunday origin and product after a 56-day
+  warm-up. Rolling sales (7/14/28/56 days, ending on the origin), same 30-day
+  window one year earlier, snapshot stock on hand, calendar and product metadata.
+  Target `target_30d` is recorded units over origin+1 to origin+30.
+- `expiry_features.csv`: one row per batch at its first Sunday snapshot within
+  60 days of expiry. Snapshot stock, FEFO units ahead of the batch, recent product
+  sales, and a heuristic projected leftover fraction. Labels are copied from
+  `batches.csv` and are never features.
+
+Each row carries a `split` from shared calendar boundaries; rows whose target or
+outcome is unknown, or resolves across a boundary, are `excluded`. Expiry rows in
+the first 27 days have no 28-day sales rate, so they are excluded as warm-up.
+
 ## Validation
 
 `python -m src.data_quality` fails on invalid keys, missing values, foreign keys,

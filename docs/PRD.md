@@ -1,6 +1,6 @@
 # Pharmacy demand and expiry-risk project requirements
 
-Updated November 7, 2026 (Day 2). Source of acceptance criteria: the assessment
+Updated November 8, 2026 (Day 3). Source of acceptance criteria: the assessment
 document in the repository root. Submission date: November 15, 2026; use the
 invitation for the exact cutoff and timezone. Target completion: November 14.
 
@@ -10,9 +10,11 @@ Build a reproducible, explainable single-store demonstration that forecasts
 medicine demand and flags batches likely to expire with material leftover stock.
 Outputs are advisory stock rotation/replenishment guidance, never treatment advice.
 
-Day 2 implements synthetic generation, observed batch outcomes, weekly inventory
-snapshots, data-quality checks, tests, reproducible installation, and CI. EDA,
-feature engineering, model training, evaluation, artifacts, and app remain planned.
+Day 2 implemented synthetic generation, observed batch outcomes, weekly inventory
+snapshots, data-quality checks, tests, reproducible installation, and CI. Day 3 added
+the EDA notebook, point-in-time feature tables (`src/features.py`), the split rules
+below (`src/splits.py`), and truncation-based leakage tests. Model training,
+evaluation, artifacts, and the app remain planned.
 
 ## Prediction contract
 

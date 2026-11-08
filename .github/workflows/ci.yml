@@ -26,5 +26,7 @@ jobs:
       - run: python -m pytest -q
       - run: python src/data_generator.py
       - run: python -m src.data_quality --report reports/day2-data-quality.json
+      - run: python -m src.features --report reports/day3-splits.json
+      - run: jupyter execute notebooks/01_eda.ipynb
       - name: Verify seeded output hashes and quality report
-        run: python -c "import json,subprocess; from pathlib import Path; expected=json.loads(subprocess.check_output(['git','show','HEAD:data/manifest.json'])); actual=json.loads(Path('data/manifest.json').read_text()); assert expected['files']==actual['files']; subprocess.run(['git','diff','--exit-code','--','reports/day2-data-quality.json'],check=True)"
+        run: python -c "import json,subprocess; from pathlib import Path; expected=json.loads(subprocess.check_output(['git','show','HEAD:data/manifest.json'])); actual=json.loads(Path('data/manifest.json').read_text()); assert expected['files']==actual['files']; subprocess.run(['git','diff','--exit-code','--','reports/day2-data-quality.json','reports/day3-splits.json'],check=True)"
