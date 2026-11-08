@@ -45,12 +45,18 @@ def expiry_test_alerts(expiry, selection):
     return alerts
 
 
-def _feature_sensitivity(model, row, X_train):
+def typical_values(X_train):
+    """Median of each numeric input, and the most common category, from training rows."""
+    return {feature: X_train[feature].mode()[0] if feature == "category" else X_train[feature].median()
+            for feature in DEMAND_FEATURES}
+
+
+def _feature_sensitivity(model, row, typical_by_feature):
     """How the prediction moves if one input is set to its typical training value."""
     base = float(model.predict(row)[0])
     effects = []
     for feature in DEMAND_FEATURES:
-        typical = X_train[feature].mode()[0] if feature == "category" else X_train[feature].median()
+        typical = typical_by_feature[feature]
         changed = float(model.predict(row.assign(**{feature: typical}))[0])
         effects.append({"feature": feature, "value": row[feature].iloc[0], "typical_train_value": typical,
                         "prediction_change_from_actual_value": base - changed})
@@ -86,7 +92,7 @@ def _demand_error_analysis(demand, predictions, tuned):
             "category": test.category[worst], "actual": float(test.target_30d[worst]),
             "predicted": float(selected[worst]),
             "seasonal_naive": float(predictions.seasonal_naive[worst]),
-            "feature_sensitivity": _feature_sensitivity(tuned, X.loc[[worst]], X_train)},
+            "feature_sensitivity": _feature_sensitivity(tuned, X.loc[[worst]], typical_values(X_train))},
     }
 
 

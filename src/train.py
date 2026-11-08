@@ -34,13 +34,10 @@ DEMAND_BOOSTING_GRID = [{"max_iter": iters, "max_leaf_nodes": leaves}
 
 
 def _encode(categorical, *numeric_steps):
-    def columns(frame):
-        return [c for c in frame.columns if c not in categorical]
     numeric = make_pipeline(*numeric_steps) if numeric_steps else "passthrough"
     return ColumnTransformer([
         ("categorical", OneHotEncoder(handle_unknown="ignore", sparse_output=False), categorical),
-        ("numeric", numeric, columns),
-    ])
+    ], remainder=numeric)
 
 
 def _linear_steps():
