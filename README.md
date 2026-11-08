@@ -9,13 +9,14 @@ Outputs are advisory inventory guidance, never medication or treatment advice.
 Implemented: reproducible synthetic data, weekly inventory snapshots, observed
 expiry outcomes, validation, point-in-time feature tables, chronological
 train/validation/test splits, an executed EDA notebook, leakage tests, baselines
-and candidate models compared on validation data, narrow validation tuning, and
-Windows/Linux CI. Final test-set evaluation, saved model artifacts, and the
-inference app are **not implemented yet**.
+and candidate models compared on validation data, narrow validation tuning, a
+single held-out test evaluation with error analysis, and Windows/Linux CI. Saved
+model artifacts and the inference app are **not implemented yet**.
 
 See the [PRD and schedule](docs/PRD.md), [data contract](data/README.md),
 [EDA notebook](notebooks/01_eda.ipynb), and the [Day 2](reports/day2.md),
-[Day 3 data](reports/day3.md) and [Day 3 model comparison](reports/day3-models.md) reports. Submission is November 15, 2026;
+[Day 3 data](reports/day3.md) and [Day 3 model comparison](reports/day3-models.md) reports, and the
+[held-out test evaluation](reports/test-evaluation.md). Submission is November 15, 2026;
 the individualized invitation specifies the exact time and timezone.
 
 ## Setup
@@ -34,6 +35,7 @@ py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m src.features --report reports/day3-splits.json
 .\.venv\Scripts\jupyter.exe execute --inplace notebooks/01_eda.ipynb
 .\.venv\Scripts\python.exe -m src.train --report reports/day3-validation.json
+.\.venv\Scripts\python.exe -m src.final_evaluation --report reports/test-evaluation.json
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe -m pip check
 ```
@@ -48,6 +50,7 @@ python3.13 -m venv .venv
 .venv/bin/python -m src.features --report reports/day3-splits.json
 .venv/bin/jupyter execute --inplace notebooks/01_eda.ipynb
 .venv/bin/python -m src.train --report reports/day3-validation.json
+.venv/bin/python -m src.final_evaluation --report reports/test-evaluation.json
 .venv/bin/python -m pytest -q
 .venv/bin/python -m pip check
 ```
@@ -80,7 +83,9 @@ notebooks/01_eda  -> quality, demand patterns, label support, leakage analysis
 
 train.py          -> baselines and candidates fit on train, scored on validation only
 
-Next: single test evaluation and error analysis -> saved model -> app
+final_evaluation.py -> locked selections scored once on the test split
+
+Next: saved model -> Streamlit app
 ```
 
 ## Evaluation plan
