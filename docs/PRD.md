@@ -80,6 +80,11 @@ than fabricating labels or repeatedly tuning against final test outcomes.
 4. Run final test evaluation after model selection. Explain a prediction and an
    error; state that synthetic performance does not demonstrate real-world accuracy.
 5. One Streamlit app loading a saved artifact is sufficient. FastAPI is optional.
+   The app serves the gradient-boosting demand model and the transparent expiry
+   rule. Gradient boosting was chosen as a trained, servable artifact although
+   seasonal naive had slightly lower validation error (MAE 28.92 vs 30.61); the
+   simulator repeats its seasonality exactly, which favours seasonal naive. Test
+   results report both.
 6. A fresh clone must reproduce data, splits, training, evaluation and inference.
    Include preprocessing/inference tests as those components are implemented.
 
