@@ -17,8 +17,8 @@ below (`src/splits.py`), and truncation-based leakage tests. Day 3 also added ba
 and candidate models scored on validation only (`src/train.py`, `src/metrics.py`),
 narrow validation tuning, the expiry selection check, and a single held-out test
 evaluation (`src/final_evaluation.py`), the saved model (`src/inference.py`) and the
-Streamlit app (`app/streamlit_app.py`). Reproduction checks, the technical report
-and the video remain planned.
+Streamlit app (`app/streamlit_app.py`). The technical report is in
+`docs/technical_report.md`. Reproduction checks and the video remain planned.
 
 ## Prediction contract
 
