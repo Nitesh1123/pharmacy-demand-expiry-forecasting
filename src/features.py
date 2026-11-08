@@ -115,6 +115,7 @@ def build_expiry_features(tables):
     rows = rows.merge(tables["batches"][["batch_id", *EXPIRY_LABELS]], on="batch_id")
     rows["split"] = assign_expiry_split(rows.as_of_date, rows.outcome_date,
                                         tables["daily_sales"].date.max()).to_numpy()
+    rows.loc[rows.mean_28d.isna(), "split"] = "excluded"  # still in feature warm-up
     columns = ["as_of_date", "batch_id", "product_id", *EXPIRY_FEATURES, *EXPIRY_LABELS, "split"]
     return rows[columns].sort_values(["as_of_date", "batch_id"]).reset_index(drop=True)
 
@@ -137,6 +138,7 @@ def split_summary(tables, demand=None, expiry=None):
     summary["notes"] = [
         "Counts describe data support, not model performance.",
         "Expiry rows are one near-expiry snapshot per batch; unknown outcomes are excluded.",
+        "Expiry rows without 28 days of sales history (warm-up) are excluded.",
         "Excluded demand origins have 30-day targets that cross a split boundary.",
     ]
     return summary

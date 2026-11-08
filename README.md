@@ -19,7 +19,7 @@ the individualized invitation specifies the exact time and timezone.
 
 ## Setup
 
-Use **Python 3.13**. The dependency file pins the implemented data/testing stack,
+Use **Python 3.13**. The dependency file pins the implemented data, testing and notebook stack,
 including transitive dependencies. Additional model and app packages will be
 added and tested as those features are implemented.
 

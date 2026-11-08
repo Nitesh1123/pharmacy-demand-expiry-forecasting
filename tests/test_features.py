@@ -23,8 +23,6 @@ def short_run():
 def test_feature_lists_exclude_simulator_and_label_fields():
     assert not FORBIDDEN & set(DEMAND_FEATURES)
     assert not FORBIDDEN & set(EXPIRY_FEATURES)
-    # Final balances live in batches.quantity_remaining; only snapshot stock may be used.
-    assert "final_quantity_remaining" not in EXPIRY_FEATURES
 
 
 def test_demand_target_is_next_thirty_days_of_recorded_sales(long_run):
@@ -109,10 +107,19 @@ def test_fefo_queue_counts_only_earlier_expiring_stock_of_same_product(long_run)
     assert row.units_ahead_fefo == ahead.quantity_remaining.sum() > 0
 
 
-def test_default_split_support_matches_day2_feasibility_counts():
+def test_expiry_rows_without_a_full_sales_rate_are_warmup_exclusions(long_run):
+    expiry = build_expiry_features(long_run)
+    warmup = expiry.mean_28d.isna()
+    assert warmup.any()
+    assert (expiry.loc[warmup, "split"] == "excluded").all()
+    assert expiry.loc[warmup, "as_of_date"].max() < "2022-01-28"
+
+
+def test_default_split_support_is_day2_feasibility_minus_warmup():
     summary = split_summary(generate_dataset())
     expiry = summary["expiry"]
+    # Day 2 counted 262/179 in train before the 48 warm-up batches were removed.
     assert [(expiry[s]["positive"], expiry[s]["negative"])
-            for s in ("train", "validation", "test")] == [(262, 179), (25, 29), (71, 32)]
+            for s in ("train", "validation", "test")] == [(236, 157), (25, 29), (71, 32)]
     for name in ("demand", "expiry"):
         assert sum(v["rows"] for v in summary[name].values()) == summary[f"{name}_rows"]

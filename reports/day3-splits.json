@@ -33,10 +33,10 @@
   },
   "expiry": {
     "excluded": {
-      "rows": 88,
-      "independent_batches": 88,
-      "positive": 31,
-      "negative": 25,
+      "rows": 136,
+      "independent_batches": 136,
+      "positive": 57,
+      "negative": 47,
       "unknown_outcome": 32
     },
     "test": {
@@ -47,10 +47,10 @@
       "unknown_outcome": 0
     },
     "train": {
-      "rows": 441,
-      "independent_batches": 441,
-      "positive": 262,
-      "negative": 179,
+      "rows": 393,
+      "independent_batches": 393,
+      "positive": 236,
+      "negative": 157,
       "unknown_outcome": 0
     },
     "validation": {
@@ -64,6 +64,7 @@
   "notes": [
     "Counts describe data support, not model performance.",
     "Expiry rows are one near-expiry snapshot per batch; unknown outcomes are excluded.",
+    "Expiry rows without 28 days of sales history (warm-up) are excluded.",
     "Excluded demand origins have 30-day targets that cross a split boundary."
   ]
 }

@@ -82,7 +82,8 @@ evaluation must report independent batch counts, not only snapshot-row counts.
   `batches.csv` and are never features.
 
 Each row carries a `split` from shared calendar boundaries; rows whose target or
-outcome is unknown, or resolves across a boundary, are `excluded`.
+outcome is unknown, or resolves across a boundary, are `excluded`. Expiry rows in
+the first 27 days have no 28-day sales rate, so they are excluded as warm-up.
 
 ## Validation
 

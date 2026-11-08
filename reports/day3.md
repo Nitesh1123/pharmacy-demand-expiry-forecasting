@@ -24,13 +24,15 @@ features.
 
 | Period | Demand origins × products | Expiry batches (positive / negative) |
 |---|---:|---:|
-| Train | 62 × 80 = 4,960 | 262 / 179 |
+| Train | 62 × 80 = 4,960 | 236 / 157 |
 | Validation | 9 × 80 = 720 | 25 / 29 |
 | Test | 13 × 80 = 1,040 | 71 / 32 |
-| Excluded | 640 (targets cross a boundary) | 88 (32 unknown, 56 resolve after a boundary) |
+| Excluded | 640 (targets cross a boundary) | 136 (32 unknown, 56 resolve after a boundary, 48 warm-up) |
 
-The expiry counts reproduce the Day 2 feasibility analysis exactly, and a test
-locks them in. They describe data support, not model performance.
+Validation and test match the Day 2 feasibility analysis exactly. Train is Day 2's
+262 / 179 minus 48 batches seen in the first 27 days, which have no 28-day sales rate
+and fall inside the PRD's feature warm-up. A test locks these counts in. They describe
+data support, not model performance.
 
 ## Leakage evidence
 
@@ -45,12 +47,16 @@ locks them in. They describe data support, not model performance.
 - **Bug found and fixed.** An origin whose 30-day window ran past the end of the
   data was labelled `train`. The split rule now requires the target or outcome to
   be fully observed. A regression test covers this.
+- **Bug found and fixed.** Expiry rows without a full 28-day sales rate were kept in
+  training, although the PRD starts training after feature warm-up. The rule baseline
+  also read them as "no alert". They are now excluded, and a test covers this.
 
 ## EDA findings that shape Day 4
 
 - The data passes every integrity check. The only missing values are unknown
   outcomes, which stay unknown. Same-window-last-year sales are undefined in the
-  first year.
+  first year, which is 71% of training demand rows, so that feature needs a model
+  that handles missing values or imputation fitted on training data.
 - Recent sales nearly determine the 30-day total: Spearman correlation is 0.99 on
   training data. The 28-day moving average scaled to 30 days is therefore a strong
   baseline.
@@ -58,8 +64,8 @@ locks them in. They describe data support, not model performance.
   peak in Jan–Feb. Weekends run about 20% above weekdays; this mostly averages out
   over a 30-day window.
 - Expiry baseline rule: alert when projected leftover is above 20% of received
-  units. On training data it gives 218 true positives, 44 false negatives, 11 false
-  positives and 168 true negatives.
+  units. On training data it gives 218 true positives, 18 false negatives, 11 false
+  positives and 146 true negatives.
 - Many positive batches are short-dated deliveries first seen fewer than 30 days
   before expiry. This separation partly reflects the stress scenario.
 - Validation support is small: 54 batches. Report bootstrap intervals and keep
@@ -67,7 +73,7 @@ locks them in. They describe data support, not model performance.
 
 ## Verification
 
-- 35 tests pass. The suite includes the leakage, split-boundary and feasibility
+- 36 tests pass. The suite includes the leakage, split-boundary and feasibility
   tests.
 - The default generator, the validator, `python -m src.features` and the notebook
   all run end to end. CI now also builds the features, executes the notebook, and
