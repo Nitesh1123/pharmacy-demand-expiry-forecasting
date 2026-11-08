@@ -1,0 +1,113 @@
+{
+  "demand": {
+    "evaluated_split": "validation",
+    "train_rows": 4960,
+    "validation_rows": 720,
+    "validation_origins": 9,
+    "models": {
+      "moving_average_28d": {
+        "mae": 49.562,
+        "rmse": 81.7422,
+        "wape": 0.0772
+      },
+      "seasonal_naive": {
+        "mae": 28.9194,
+        "rmse": 38.6156,
+        "wape": 0.0451
+      },
+      "ridge": {
+        "mae": 55.1476,
+        "rmse": 80.9309,
+        "wape": 0.0859
+      },
+      "gradient_boosting": {
+        "mae": 30.6062,
+        "rmse": 44.071,
+        "wape": 0.0477
+      }
+    }
+  },
+  "expiry": {
+    "evaluated_split": "validation",
+    "train_batches": 393,
+    "validation_batches": 54,
+    "positive": 25,
+    "negative": 29,
+    "probability_cutoff": 0.5,
+    "models": {
+      "rule": {
+        "tp": 24,
+        "fp": 2,
+        "fn": 1,
+        "tn": 27,
+        "precision": 0.9231,
+        "recall": 0.96,
+        "f1": 0.9412,
+        "intervals_95": {
+          "precision": [
+            0.8065,
+            1.0
+          ],
+          "recall": [
+            0.875,
+            1.0
+          ],
+          "f1": [
+            0.8621,
+            1.0
+          ]
+        }
+      },
+      "logistic_regression": {
+        "tp": 23,
+        "fp": 2,
+        "fn": 2,
+        "tn": 27,
+        "precision": 0.92,
+        "recall": 0.92,
+        "f1": 0.92,
+        "intervals_95": {
+          "precision": [
+            0.8077,
+            1.0
+          ],
+          "recall": [
+            0.8,
+            1.0
+          ],
+          "f1": [
+            0.8333,
+            0.9825
+          ]
+        }
+      },
+      "gradient_boosting": {
+        "tp": 24,
+        "fp": 3,
+        "fn": 1,
+        "tn": 26,
+        "precision": 0.8889,
+        "recall": 0.96,
+        "f1": 0.9231,
+        "intervals_95": {
+          "precision": [
+            0.75,
+            1.0
+          ],
+          "recall": [
+            0.875,
+            1.0
+          ],
+          "f1": [
+            0.8333,
+            0.9851
+          ]
+        }
+      }
+    }
+  },
+  "notes": [
+    "Validation only; the test split has not been evaluated.",
+    "Synthetic stress-test data; not evidence of real-pharmacy accuracy."
+  ]
+}

@@ -51,7 +51,7 @@ data support, not model performance.
   training, although the PRD starts training after feature warm-up. The rule baseline
   also read them as "no alert". They are now excluded, and a test covers this.
 
-## EDA findings that shape Day 4
+## EDA findings that shape modeling
 
 - The data passes every integrity check. The only missing values are unknown
   outcomes, which stay unknown. Same-window-last-year sales are undefined in the
@@ -81,10 +81,13 @@ data support, not model performance.
 - Dependencies are pinned in `requirements.txt` for Python 3.13, now including
   matplotlib and the notebook runner.
 
-## Next (Day 4)
+## Next
+
+The baselines and candidates below were finished the same day; see the
+[Day 3 model comparison](day3-models.md).
 
 - Demand: moving-average and seasonal-naive baselines, a regularised linear model
   and a gradient-boosted tree.
 - Expiry: the rule baseline, logistic regression and a tree model.
 - Fit all transforms on training data only, select on validation, and leave the
-  test set untouched until Day 5.
+  test set untouched until final evaluation.

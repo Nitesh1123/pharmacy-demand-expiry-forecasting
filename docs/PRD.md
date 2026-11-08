@@ -13,8 +13,9 @@ Outputs are advisory stock rotation/replenishment guidance, never treatment advi
 Day 2 implemented synthetic generation, observed batch outcomes, weekly inventory
 snapshots, data-quality checks, tests, reproducible installation, and CI. Day 3 added
 the EDA notebook, point-in-time feature tables (`src/features.py`), the split rules
-below (`src/splits.py`), and truncation-based leakage tests. Model training,
-evaluation, artifacts, and the app remain planned.
+below (`src/splits.py`), and truncation-based leakage tests. Day 3 also added baselines
+and candidate models scored on validation only (`src/train.py`, `src/metrics.py`).
+Alert threshold selection, test evaluation, artifacts, and the app remain planned.
 
 ## Prediction contract
 
@@ -72,25 +73,39 @@ than fabricating labels or repeatedly tuning against final test outcomes.
    Report MAE, RMSE, WAPE for demand; precision, recall, F1 and confusion matrix
    for batch alerts. Define zero-denominator behavior. Choose the alert threshold
    on validation data and report independent batch support and uncertainty.
+   Expiry selection rule, fixed before the test set is opened: the transparent
+   projected-leftover rule stays the alert method unless a candidate clearly beats
+   it on validation, meaning the 95% paired bootstrap interval for the candidate's
+   F1 minus the rule's F1 is entirely above zero.
 4. Run final test evaluation after model selection. Explain a prediction and an
    error; state that synthetic performance does not demonstrate real-world accuracy.
 5. One Streamlit app loading a saved artifact is sufficient. FastAPI is optional.
+   The app serves the gradient-boosting demand model and the transparent expiry
+   rule. Gradient boosting was chosen as a trained, servable artifact although
+   seasonal naive had slightly lower validation error (MAE 28.92 vs 30.61); the
+   simulator repeats its seasonality exactly, which favours seasonal naive. Test
+   results report both.
 6. A fresh clone must reproduce data, splits, training, evaluation and inference.
    Include preprocessing/inference tests as those components are implemented.
 
 ## Delivery plan
 
-| Date (2026) | Deliverable |
-|---|---|
-| Nov 7, Saturday | Correct data/outcomes, quality tests, reproducible setup, Day 2 PR |
-| Nov 8, Sunday | EDA, point-in-time features, temporal split implementation |
-| Nov 9, Monday | Baselines and first candidate models |
-| Nov 10, Tuesday | Candidate comparison and validation tuning |
-| Nov 11, Wednesday | Final evaluation, error analysis, explanation |
-| Nov 12, Thursday | Saved artifact and working inference app |
-| Nov 13, Friday | Reproduction and failure-case tests |
-| Nov 14, Saturday | Report, README, 3–5 minute video, accessible links |
-| Nov 15, Sunday | Verification and submission before the invitation cutoff |
+Day numbers count calendar days from the project start on November 6.
+
+| Day | Date (2026) | Deliverable |
+|---:|---|---|
+| 1 | Nov 6, Friday | Repository, requirements, first data generator |
+| 2 | Nov 7, Saturday | Correct data/outcomes, quality tests, reproducible setup, PR |
+| 3 | Nov 8, Sunday | EDA, point-in-time features, temporal split implementation |
+| 4 | Nov 9, Monday | Baselines and first candidate models |
+| 5 | Nov 10, Tuesday | Candidate comparison and validation tuning |
+| 6 | Nov 11, Wednesday | Final evaluation, error analysis, explanation |
+| 7 | Nov 12, Thursday | Saved artifact and working inference app |
+| 8 | Nov 13, Friday | Reproduction and failure-case tests |
+| 9 | Nov 14, Saturday | Report, README, 3–5 minute video, accessible links |
+| 10 | Nov 15, Sunday | Verification and submission before the invitation cutoff |
+
+Baselines and first candidates, planned for Day 4, were finished early on Day 3.
 
 ## Submission evidence
 
