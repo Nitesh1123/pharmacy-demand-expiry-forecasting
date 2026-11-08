@@ -37,9 +37,9 @@ py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m src.train --report reports/day3-validation.json
 .\.venv\Scripts\python.exe -m src.final_evaluation --report reports/test-evaluation.json
 .\.venv\Scripts\python.exe -m src.inference
-.\.venv\Scripts\streamlit.exe run app/streamlit_app.py
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe -m pip check
+.\.venv\Scripts\streamlit.exe run app/streamlit_app.py
 ```
 
 Linux/macOS with Python 3.13 installed:
@@ -54,9 +54,9 @@ python3.13 -m venv .venv
 .venv/bin/python -m src.train --report reports/day3-validation.json
 .venv/bin/python -m src.final_evaluation --report reports/test-evaluation.json
 .venv/bin/python -m src.inference
-.venv/bin/streamlit run app/streamlit_app.py
 .venv/bin/python -m pytest -q
 .venv/bin/python -m pip check
+.venv/bin/streamlit run app/streamlit_app.py
 ```
 
 The generator defaults to seed 42, 80 products, and 730 days starting on
