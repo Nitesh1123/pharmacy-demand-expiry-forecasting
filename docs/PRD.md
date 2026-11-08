@@ -1,6 +1,6 @@
 # Pharmacy demand and expiry-risk project requirements
 
-Updated November 8, 2026 (Day 3). Source of acceptance criteria: the assessment
+Updated November 8, 2026 (Day 4). Source of acceptance criteria: the assessment
 document in the repository root. Submission date: November 15, 2026; use the
 invitation for the exact cutoff and timezone. Target completion: November 14.
 
@@ -13,8 +13,9 @@ Outputs are advisory stock rotation/replenishment guidance, never treatment advi
 Day 2 implemented synthetic generation, observed batch outcomes, weekly inventory
 snapshots, data-quality checks, tests, reproducible installation, and CI. Day 3 added
 the EDA notebook, point-in-time feature tables (`src/features.py`), the split rules
-below (`src/splits.py`), and truncation-based leakage tests. Model training,
-evaluation, artifacts, and the app remain planned.
+below (`src/splits.py`), and truncation-based leakage tests. Day 4 added baselines
+and candidate models scored on validation only (`src/train.py`, `src/metrics.py`).
+Alert threshold selection, test evaluation, artifacts, and the app remain planned.
 
 ## Prediction contract
 

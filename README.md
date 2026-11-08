@@ -4,23 +4,24 @@ An individual ML project for pharmacy inventory decision support. The intended
 outputs are a 30-day product demand forecast and batch expiry-risk alerts.
 Outputs are advisory inventory guidance, never medication or treatment advice.
 
-## Current status: Day 3 — November 8, 2026
+## Current status: Day 4 — November 8, 2026
 
 Implemented: reproducible synthetic data, weekly inventory snapshots, observed
 expiry outcomes, validation, point-in-time feature tables, chronological
-train/validation/test splits, an executed EDA notebook, leakage tests, and
-Windows/Linux CI. Model training, evaluation, model artifacts, and the inference
-app are **not implemented yet**.
+train/validation/test splits, an executed EDA notebook, leakage tests, baselines
+and candidate models compared on validation data, and Windows/Linux CI. Alert
+threshold selection, final test-set evaluation, saved model artifacts, and the
+inference app are **not implemented yet**.
 
 See the [PRD and schedule](docs/PRD.md), [data contract](data/README.md),
-[EDA notebook](notebooks/01_eda.ipynb), and the [Day 2](reports/day2.md) and
-[Day 3](reports/day3.md) reports. Submission is November 15, 2026;
+[EDA notebook](notebooks/01_eda.ipynb), and the [Day 2](reports/day2.md),
+[Day 3](reports/day3.md) and [Day 4](reports/day4.md) reports. Submission is November 15, 2026;
 the individualized invitation specifies the exact time and timezone.
 
 ## Setup
 
-Use **Python 3.13**. The dependency file pins the implemented data, testing and notebook stack,
-including transitive dependencies. Additional model and app packages will be
+Use **Python 3.13**. The dependency file pins the implemented data, testing, notebook and model-training stack,
+including transitive dependencies. Additional app packages will be
 added and tested as those features are implemented.
 
 Windows PowerShell (activation is not required):
@@ -32,6 +33,7 @@ py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m src.data_quality --report reports/day2-data-quality.json
 .\.venv\Scripts\python.exe -m src.features --report reports/day3-splits.json
 .\.venv\Scripts\jupyter.exe execute --inplace notebooks/01_eda.ipynb
+.\.venv\Scripts\python.exe -m src.train --report reports/day4-validation.json
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe -m pip check
 ```
@@ -45,6 +47,7 @@ python3.13 -m venv .venv
 .venv/bin/python -m src.data_quality --report reports/day2-data-quality.json
 .venv/bin/python -m src.features --report reports/day3-splits.json
 .venv/bin/jupyter execute --inplace notebooks/01_eda.ipynb
+.venv/bin/python -m src.train --report reports/day4-validation.json
 .venv/bin/python -m pytest -q
 .venv/bin/python -m pip check
 ```
@@ -75,7 +78,9 @@ features.py       -> demand_features.csv (Sunday origin x product, 30-day target
 splits.py         -> shared calendar boundaries; targets/outcomes never cross them
 notebooks/01_eda  -> quality, demand patterns, label support, leakage analysis
 
-Next: baseline/candidates -> validation selection -> test evaluation -> saved model -> app
+train.py          -> baselines and candidates fit on train, scored on validation only
+
+Next: alert threshold and selection -> single test evaluation -> saved model -> app
 ```
 
 ## Evaluation plan
