@@ -92,7 +92,7 @@ rule on all 54 batches, so its interval is exactly zero.
 - Results are from synthetic stress-test data and say nothing about real pharmacies.
 - Tuning was deliberately narrow, and selected scores are optimistic.
 
-## Next (Day 4, November 9)
+## Decisions after this comparison
 
 - Expiry decision: the transparent rule stays the alert method unless a candidate
   clearly beats it on validation, meaning the 95% paired bootstrap interval for the

@@ -1,18 +1,32 @@
 # Pharmacy Medicine Demand & Expiry-Risk Forecasting
 
-An individual ML project for pharmacy inventory decision support. The intended
-outputs are a 30-day product demand forecast and batch expiry-risk alerts.
-Outputs are advisory inventory guidance, never medication or treatment advice.
+An individual ML project for pharmacy inventory decision support. It produces a
+30-day product demand forecast and batch expiry-risk alerts. Outputs are advisory
+inventory guidance, never medication or treatment advice.
 
-## Current status: Day 3 — November 8, 2026
+## Status: complete for submission
 
-Implemented: reproducible synthetic data, weekly inventory snapshots, observed
+**Implemented:** reproducible synthetic data, weekly inventory snapshots, observed
 expiry outcomes, validation, point-in-time feature tables, chronological
 train/validation/test splits, an executed EDA notebook, leakage tests, baselines
 and candidate models compared on validation data, narrow validation tuning, a
 single held-out test evaluation with error analysis, a saved demand model, a
-Streamlit inference app, and Windows/Linux CI. A deployed live demo is **not
-implemented**; the app runs locally.
+Streamlit inference app, failure-case tests, and Windows/Linux CI.
+
+**Not implemented:** a hosted live demo (the app runs locally) and a separate API,
+which the project scope treats as optional. The demo video link is in the submission form.
+
+## Results on the held-out test set
+
+All results come from synthetic data and do not show real-pharmacy accuracy.
+
+| Task | Served approach | Result | Best comparison |
+|---|---|---|---|
+| Demand, 30-day units per product | Tuned gradient boosting | MAE 26.74, RMSE 36.01, WAPE 4.39% | Seasonal naive: MAE 27.51, RMSE 35.56, WAPE 4.52% |
+| Expiry alert per batch | Transparent projected-leftover rule | Precision 0.93, recall 0.94, F1 0.94 | Gradient boosting: F1 0.95 |
+
+The two demand approaches are close. No expiry model clearly beat the rule on
+validation, so the rule stayed selected.
 
 See the [PRD and schedule](docs/PRD.md), [data contract](data/README.md),
 [EDA notebook](notebooks/01_eda.ipynb), and the [Day 2](reports/day2.md),
@@ -97,11 +111,11 @@ inference.py      -> saves the tested demand model; forecasts and expiry guidanc
 app/streamlit_app -> loads the saved model; advisory review by Sunday date
 ```
 
-## Evaluation plan
+## Evaluation
 
-- Demand: moving-average or seasonal-naive baseline plus justified candidates;
-  MAE, RMSE, WAPE on complete future 30-day windows.
-- Expiry: compare predicted alerts with actual leftovers at expiry; precision,
+- Demand: moving-average and seasonal-naive baselines against ridge and gradient
+  boosting; MAE, RMSE, WAPE on complete future 30-day windows.
+- Expiry: predicted alerts compared with actual leftovers at expiry; precision,
   recall, F1 and confusion matrix. Unknown outcomes are not negatives.
 - Chronological origins across all products, with labels available before the
   next evaluation boundary. See the PRD for simulator-only fields excluded from inputs.

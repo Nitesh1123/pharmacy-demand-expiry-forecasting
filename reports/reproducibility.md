@@ -3,7 +3,18 @@
 Planned for Day 8 and completed early. These checks changed how bad inputs are handled.
 They did not change any model, split or result.
 
-## Fresh-clone reproduction
+## Final fresh-clone run, November 9, 2026
+
+The finished project was cloned from GitHub at commit `e4f8fca` into an empty folder with a
+new Python 3.13 virtual environment, and the README's Windows commands were run in order.
+
+- All steps passed: 96 tests, `pip check`, and the app's health endpoint returned `ok`.
+- The hashes in `data/manifest.json` matched all five regenerated CSVs.
+- The manifest and the quality, split, validation and test reports matched the checked-in
+  copies. Only the re-executed notebook and its two exported EDA images differed.
+- Commits after `e4f8fca` change documentation only.
+
+## First fresh-clone reproduction
 
 The project was cloned from GitHub at commit `fa3a8d8` into an empty folder with a new
 Python 3.13 virtual environment. The Windows commands were read from the README and run
