@@ -41,6 +41,8 @@ def readable(value):
 
 
 st.set_page_config(page_title="Pharmacy Stock Review", layout="wide")
+# Captions carry the caveats, so keep them readable on the soft theme backgrounds.
+st.html('<style>.stApp [data-testid="stCaptionContainer"] { opacity: 0.8; }</style>')
 st.title("Pharmacy stock review")
 st.warning("Advisory stock guidance for human review, not medication or treatment advice. "
            "Results come from synthetic data and do not show real-pharmacy accuracy.")

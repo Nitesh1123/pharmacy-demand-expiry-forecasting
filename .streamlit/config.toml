@@ -1,0 +1,46 @@
+# A calm sage palette for long table review. Follows the viewer's light or dark setting.
+
+[client]
+toolbarMode = "minimal"
+
+[theme]
+baseRadius = "medium"
+headingFontSizes = ["2rem", "1.35rem", "1.15rem", "1rem", "1rem", "1rem"]
+headingFontWeights = [500, 500, 500, 500, 500, 500]
+metricValueFontSize = "1.75rem"
+metricValueFontWeight = 400
+showSidebarBorder = false
+
+[theme.light]
+backgroundColor = "#F4F6F1"
+secondaryBackgroundColor = "#E9EEE6"
+textColor = "#2F3D38"
+primaryColor = "#3F6F64"
+linkColor = "#3F6F64"
+borderColor = "#D8DFD5"
+dataframeBorderColor = "#DFE5DB"
+dataframeHeaderBackgroundColor = "#ECF0E8"
+dataframeHeaderTextColor = "#4C5B55"
+yellowBackgroundColor = "#F3ECD7"
+yellowTextColor = "#6B5523"
+blueBackgroundColor = "#E3ECEA"
+blueTextColor = "#35575A"
+redBackgroundColor = "#F3E2DD"
+redTextColor = "#7B3F35"
+
+[theme.dark]
+backgroundColor = "#1E2624"
+secondaryBackgroundColor = "#27312E"
+textColor = "#D8E0DA"
+primaryColor = "#8CB5A8"
+linkColor = "#8CB5A8"
+borderColor = "#36423E"
+dataframeBorderColor = "#323D39"
+dataframeHeaderBackgroundColor = "#27312E"
+dataframeHeaderTextColor = "#B4C0B9"
+yellowBackgroundColor = "#3A3424"
+yellowTextColor = "#E3D3A6"
+blueBackgroundColor = "#283A39"
+blueTextColor = "#BDD6D2"
+redBackgroundColor = "#402C28"
+redTextColor = "#E8C2B8"
