@@ -1,6 +1,6 @@
 # Pharmacy demand and expiry-risk project requirements
 
-Updated November 8, 2026 (Day 3). Source of acceptance criteria: the assessment
+Updated November 9, 2026. Source of acceptance criteria: the assessment
 brief supplied with the invitation. Submission date: November 15, 2026; use the
 invitation for the exact cutoff and timezone. Target completion: November 14.
 
@@ -19,7 +19,8 @@ narrow validation tuning, the expiry selection check, and a single held-out test
 evaluation (`src/final_evaluation.py`), the saved model (`src/inference.py`) and the
 Streamlit app (`app/streamlit_app.py`). The technical report is in
 `docs/technical_report.md`. Reproduction and failure-case checks are in
-`reports/reproducibility.md`. The video remains planned.
+`reports/reproducibility.md`. The build is complete; the remaining steps are recording
+the demo video and submitting the form.
 
 ## Prediction contract
 
@@ -31,12 +32,12 @@ the same 30-day total.
 Expiry: at a Sunday end-of-day snapshot, predict whether a currently stocked
 batch will expire with **more than 20% of its original received quantity unsold**.
 This is a binary observed outcome; an alert is a prediction of that outcome.
-Risk probabilities and an alert threshold will be calibrated/selected on
-validation data, not the final test set. A transparent rule is the baseline.
+Candidate models' alert cutoffs were selected on validation data, not the final
+test set. The transparent rule is the baseline and remains the selected method.
 
 Unexpired batches with stock at the end of observed history have unknown
 outcomes. Sold-out batches are resolved negatives under the no-returns assumption.
-The current implementation records these distinctions; it does not train a model.
+Unknown outcomes are left out of training and evaluation, never treated as negatives.
 
 ## Data and leakage controls
 
@@ -45,7 +46,7 @@ dated snapshots or reconstruction through the prediction date. Never use final
 balances, future outcomes, or simulator-only demand parameters as predictors.
 All imputation, encoding and other learned transforms fit on training data only.
 
-Planned temporal boundaries for the default history:
+Temporal boundaries for the default history:
 
 | Set | Prediction origins | Additional eligibility |
 |---|---|---|
@@ -91,7 +92,7 @@ than fabricating labels or repeatedly tuning against final test outcomes.
    28.71, with worse RMSE than seasonal naive. The simulator repeats its seasonality
    exactly, which favours seasonal naive. Test results report both.
 6. A fresh clone must reproduce data, splits, training, evaluation and inference.
-   Include preprocessing/inference tests as those components are implemented.
+   Preprocessing, inference and failure-case tests are included.
 
 ## Delivery plan
 
@@ -110,8 +111,9 @@ Day numbers count calendar days from the project start on November 6.
 | 9 | Nov 14, Saturday | Report, README, 3–5 minute video, accessible links |
 | 10 | Nov 15, Sunday | Verification and submission before the invitation cutoff |
 
-Baselines, candidate comparison, tuning, final evaluation, the saved model, the
-app and reproduction checks, planned for Days 4 to 8, were finished early on Day 3.
+This table is the planning schedule, as in the brief's suggested plan. Baselines,
+candidate comparison, tuning, final evaluation, the saved model, the app, reproduction
+checks and the technical report were finished early, by November 9.
 
 ## Submission evidence
 
